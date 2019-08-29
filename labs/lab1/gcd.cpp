@@ -23,6 +23,18 @@ int gcd_iterative(int m, int n) {
   return abs(n);
 }
 
+/*
+m n
+8 10
+10 % 8 = 2
+m n
+2 10
+10 % 2 = 0
+m n
+0 2
+=> 2
+*/
+
 // algorithm is to take mod of n and m, and keep passing
 // in m as n to keep modding by remainder
 // make sure it's a positive number
@@ -30,6 +42,27 @@ int gcd_recursive(int m, int n) {
   if (m == 0)
     return abs(n);
   return gcd_recursive(n % m, m);
+}
+
+/*
+m n
+8 10
+8 % 10 = 8
+m n
+10 8
+10 % 8 = 2
+m n
+8 2
+8 % 2 = 0
+m n
+2 0
+=> 2
+*/
+
+int gcd_recursive_2(int m, int n) {
+  if (n == 0)
+    return abs(m);
+  return gcd_recursive_2(n, m % n);
 }
 
 // use same code for number input
