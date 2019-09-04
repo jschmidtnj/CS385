@@ -84,7 +84,7 @@ int main() {
   // big things should go on the heap (like an array), small things on stack
   // when in doubt, put it on the heap
 
-  // valgrind ./pointers.o // used for checking if stuff is deleted
+  // valgrind ./pointers.out // used for checking if stuff is deleted
 
   // when program is done, the stack is popped, but the heap stays (memory leak if not deleted)
   // *values puts it on the heap.
