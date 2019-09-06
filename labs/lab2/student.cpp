@@ -59,7 +59,7 @@ vector<Student> find_failing_students(const vector<Student> &students)
   vector<Student> failing_students;
   // Iterates through the students vector, appending each student whose gpa is
   // less than 1.0 to the failing_students vector.
-  for (const auto student : students)
+  for (const Student student : students)
     if (student.gpa() < 1.0)
       failing_students.push_back(student);
   return failing_students;
@@ -71,7 +71,7 @@ vector<Student> find_failing_students(const vector<Student> &students)
 void print_students(const vector<Student> &students)
 {
   // Iterates through the students vector, calling print_info() for each student.
-  for (const auto student : students)
+  for (const Student student : students)
     student.print_info();
 }
 
