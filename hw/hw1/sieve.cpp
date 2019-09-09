@@ -22,16 +22,7 @@ using namespace std;
 class PrimesSieve
 {
 public:
-  /**
-   * PrimesSieve constructor
-   * takes input int limit, which is up to which the prime numbers
-   * are calculated
-   */
-  PrimesSieve(int limit) : is_prime_{new bool[limit + 1]}, limit_{limit}
-  {
-    // run sieve algorithm on init
-    sieve();
-  }
+  PrimesSieve(int limit);
 
   /**
    * PrimesSieve deconstructor
@@ -47,7 +38,7 @@ public:
    * accessor for the number
    * of primes found up to input limit
    */
-  inline int num_primes() const
+  int num_primes() const
   {
     return num_primes_;
   }
@@ -56,98 +47,117 @@ public:
    * returns the max prime number
    * from sieve method
    */
-  inline int max_prime() const
+  int max_prime() const
   {
     return max_prime_;
   }
 
-  /**
-   * display_primes
-   * 
-   * displayes the prime numbers found from the sieve algorithm in
-   * a specific format, defined in guidelines for project
-   */
-  void display_primes() const
-  {
-    // write code to display the primes in the format specified in the
-    // requirements document.
-    cout << endl
-         << "Number of primes found: " << num_primes_ << endl;
-    cout << "Primes up to " << limit_ << ":";
-    const int max_prime_width = num_digits(max_prime_),
-              primes_per_row = 80 / (max_prime_width + 1);
-    int i, j, prime_count = 0;
-    for (i = 2; i <= max_prime_; i++)
-      if (is_prime_[i])
-      {
-        // newline if last in row was before
-        if (prime_count % primes_per_row == 0)
-          cout << endl;
-        prime_count++;
-        // add spaces n multirow
-        if (num_primes_ > primes_per_row)
-          for (j = 0; j < max_prime_width - num_digits(i); j++)
-            cout << ' ';
-        cout << i;
-        // space if not last prime and not last in row
-        if (i != max_prime_ && prime_count % primes_per_row != 0)
-          cout << ' ';
-      }
-  }
+  void display_primes() const;
 
 private:
+  // Instance variables
   bool *const is_prime_;
   const int limit_;
   int num_primes_, max_prime_;
 
-  /**
-   * count_primes populates the num_primes_
-   * and max_primes_ with the correct values
-   * for each respectively
-   */
-  void count_primes()
-  {
-    // write code to count the number of primes found
-    num_primes_ = 0;
-    for (int i = 2; i <= limit_; i++)
-      if (is_prime_[i])
-      {
-        num_primes_++;
-        max_prime_ = i;
-      }
-  }
-
-  /**
-   * num_digits gets the number of digits
-   * in a given int
-   */
-  int num_digits(int num) const
-  {
-    // write code to determine how many digits are in an integer
-    // Hint: No strings are needed. Keep dividing by 10.
-    int count;
-    for (count = 0; num > 0; count++)
-      num /= 10;
-    return count;
-  }
-
-  /**
-   * main sieve algorithm, implemented to count
-   * primes at the end of execution (see above)
-   */
-  void sieve()
-  {
-    // write sieve algorithm
-    int i, j;
-    for (i = 2; i <= limit_; i++)
-      is_prime_[i] = true;
-    for (i = 2; i <= sqrt(limit_); i++)
-      if (is_prime_[i])
-        for (j = i * i; j <= limit_; j += i)
-          is_prime_[j] = false;
-    count_primes();
-  }
+  // Method declarations
+  void count_primes();
+  void sieve();
+  static int num_digits(int num);
 };
+
+/**
+ * PrimesSieve constructor
+ * takes input int limit, which is up to which the prime numbers
+ * are calculated
+ */
+PrimesSieve::PrimesSieve(int limit) : is_prime_{new bool[limit + 1]}, limit_{limit}
+{
+  // run sieve algorithm on init
+  sieve();
+}
+
+/**
+ * display_primes
+ * 
+ * displayes the prime numbers found from the sieve algorithm in
+ * a specific format, defined in guidelines for project
+ */
+void PrimesSieve::display_primes() const
+{
+  // write code to display the primes in the format specified in the
+  // requirements document.
+  cout << endl
+       << "Number of primes found: " << num_primes_ << endl;
+  cout << "Primes up to " << limit_ << ":";
+  const int max_prime_width = num_digits(max_prime_),
+            primes_per_row = 80 / (max_prime_width + 1);
+  int i, j, prime_count = 0;
+  for (i = 2; i <= max_prime_; i++)
+    if (is_prime_[i])
+    {
+      // newline if last in row was before
+      if (prime_count % primes_per_row == 0)
+        cout << endl;
+      prime_count++;
+      // add spaces n multirow
+      if (num_primes_ > primes_per_row)
+        for (j = 0; j < max_prime_width - num_digits(i); j++)
+          cout << ' ';
+      cout << i;
+      // space if not last prime and not last in row
+      if (i != max_prime_ && prime_count % primes_per_row != 0)
+        cout << ' ';
+    }
+}
+
+/**
+ * count_primes populates the num_primes_
+ * and max_primes_ with the correct values
+ * for each respectively
+ */
+void PrimesSieve::count_primes()
+{
+  // write code to count the number of primes found
+  num_primes_ = 0;
+  for (int i = 2; i <= limit_; i++)
+    if (is_prime_[i])
+    {
+      num_primes_++;
+      max_prime_ = i;
+    }
+}
+
+/**
+ * main sieve algorithm, implemented to count
+ * primes at the end of execution (see above)
+ */
+void PrimesSieve::sieve()
+{
+  // write sieve algorithm
+  int i, j;
+  for (i = 2; i <= limit_; i++)
+    is_prime_[i] = true;
+  for (i = 2; i <= sqrt(limit_); i++)
+    if (is_prime_[i])
+      for (j = i * i; j <= limit_; j += i)
+        is_prime_[j] = false;
+  count_primes();
+}
+
+/**
+ * num_digits gets the number of digits
+ * in a given int
+ */
+int PrimesSieve::num_digits(int num)
+{
+  // write code to determine how many digits are in an integer
+  // Hint: No strings are needed. Keep dividing by 10.
+  int count;
+  for (count = 0; num > 0; count++)
+    num /= 10;
+  return count;
+}
 
 /**
  * main function for getting prime limit input,
