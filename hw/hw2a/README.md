@@ -1,5 +1,7 @@
 # hw 2
 
+`pandoc -t html -o test.html --mathjax README.md`
+
 page 67:  
 4. consider algorithm:
 
@@ -71,15 +73,12 @@ page 76:
       4. x(n) = x(n-n) + n\*n - (n\*(n+1)/2)
          1. x(n) = x(0) + n^2 - n(n+1)/2
          2. x(n) = n^2 - n(n+1)/2
-   4. x(n) = x(n/2) + n for n > 1, x(1) = 1 (solve for n = 2k)
-      0. x(n/2) = x(n/4) + n/2
-         1. x(n) = (x(n/4) + n/2) + n
-         2. x(n) = x(n/4) + 3n/2
-      1. x(n/4) = x(n/8) + n/4
-         1. x(n) = (x(n/8) + n/4) + 3n/2
-         2. x(n) = x(n/8) + 7n/4
-      2. x(n/(2\*k)) = x(n/(2^k)) +(2k+1)/(2\*k)
-   5. x(n) = x(n/3) + 1 for n > 1, x(1) = 1 (solve for n = 3k)
+   4. x(n) = x(n/2) + n for n > 1, x(1) = 1 (solve for n = 2^k)
+      0. x(2^k) = x(2^(k-1)) + 2^k
+      1. x(2^(k-1)) = x(2^(k-2)) + 2^(k-1)
+         1. x(2^k) = (x(2^(k-2)) + 2^(k-1)) + 2^k
+         2. x(2^k) = x(2^(k-2)) + 
+   5. x(n) = x(n/3) + 1 for n > 1, x(1) = 1 (solve for n = 3^k)
    6. give up for now
 
 page 76-77
