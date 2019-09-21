@@ -12,7 +12,7 @@
 using namespace std;
 
 bool is_all_lowercase(const string &s) {
-  // TODO: returns true if all characters in string are lowercase
+  // returns true if all characters in string are lowercase
   // letters in the English alphabet; false otherwise.
   for (const char currentChar: s)
     if (currentChar < 'a' || currentChar > 'z')
@@ -21,7 +21,7 @@ bool is_all_lowercase(const string &s) {
 }
 
 bool all_unique_letters(const string &s) {
-  // TODO: returns true if all letters in string are unique, that is
+  // returns true if all letters in string are unique, that is
   // no duplicates are found; false otherwise.
   // You may use only a single int for storage and work with bitwise
   // and bitshifting operators.
