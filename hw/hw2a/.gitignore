@@ -1,3 +1,6 @@
 # ignore pdf and html outputs
 *.html
+!output.html
 *.pdf
+!output.pdf
+tex2pdf.*

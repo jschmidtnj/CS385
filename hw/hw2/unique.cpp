@@ -37,7 +37,7 @@ bool all_unique_letters(const string &s) {
 }
 
 int main(int argc, char * const argv[]) {
-  // TODO: reads and parses command line arguments.
+  // reads and parses command line arguments.
   // Calls other functions to produce correct output.
   if (argc != 2) {
     cerr << "Usage: ./unique <string>" << endl;
@@ -52,4 +52,7 @@ int main(int argc, char * const argv[]) {
     cout << "Duplicate letters found." << endl;
   else
     cout << "All letters are unique." << endl;
+  const char test = 'c';
+  cout << (test > 'a');
+  cout << (test <'z');
 }
