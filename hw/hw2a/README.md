@@ -123,21 +123,21 @@ def S(n):
 ```
 1. consider the following recursive algorithm for computing sum on *n* cubes: $S(n) = 1^{3} + 2^{3} + ... + n^{3}$
    a. set up and solve a recurrence relation for the number of times the algorithm's basic operation is executed
-      1. $x(n) = x(n-1) + 1, x(1) = 1$
-      2. $x(n-1) = x(n-2) + 1$
+      0. $x(n) = x(n-1) + 1, x(1) = 1$
+      1. $x(n-1) = x(n-2) + 1$
          1. $x(n) = (x(n-2) + 1) + 1$
          2. $x(n) = x(n-2) + 2$
-      3. $x(n-2) = x(n-3) + 1$
+      2. $x(n-2) = x(n-3) + 1$
          1. $x(n) = (x(n-3) + 2) + 1$
          2. $x(n) = x(n-3) + 3$
-      4. $x(n) = x(n-k) + k$
-      5. $n-k = 1$
+      3. $x(n) = x(n-k) + k$
+      4. $n-k = 1$
          1. $k=n-1$
-      6. $x(n) = x(n-(n-1)) + (n-1)$
+      5. $x(n) = x(n-(n-1)) + (n-1)$
          1. $x(n) = x(1) + (n-1)$
          2. $x(n) = 1 + (n-1)$
          3. $x(n) = n$
-   b. The non-recursive, straightforward algorithm for computing the sum is also $\mathcal{O}(n)$. This is because there is a for loop, and you have a sum variable that you keep adding the cube of the iterator to. i.e.:
+   b. The non-recursive, straightforward algorithm for computing the sum is also $\mathcal{O}(n)$. This is because there is a for loop, and you have a sum variable that you keep adding the cube of the iterator to (see `iterative` function below). There is also a $\theta (1)$ algorithm, which I showed below in the `constant_time` function. This non-recursive algorithm is faster than the recursive algorithm, or takes the same amount of time for n = 1. It uses the equation $S(n) = \frac{n^{2} \cdot (n+1)^{2}}{4}$.
 
 ```python
 def iterative(n):
@@ -146,4 +146,7 @@ def iterative(n):
   for i in range(1, n + 1):
     S += i ** 3
   return S
+
+def constant_time(n):
+   return (n**2) * ((n+1)**2) / 4
 ```

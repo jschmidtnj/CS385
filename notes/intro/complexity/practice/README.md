@@ -23,3 +23,13 @@ generate all pathagrean triplets
 ```c++
 // a^2 + b^2 = c^2
 ```
+
+## convex hull problem
+
+A set of points (finite or infinite) in a plane is called convex if for any 2 points p and q in the set, the entire line segment with end points p and q belongs to the set.
+
+The convex hull of a set S of points is the smallex convex set containing S.
+
+so you have a cloud of points and you need to find the perimeter. you can solve this by choosing a line segment and checking if all other points are on one side of the segment. if they are, then it is a perimeter line. otherwise it is an inner line.
+
+this is not just n! or n^2, because you need to create pairs of lines, and compare. creating the lines would be C(n, 2), or $\frac{n!}{2! \cdot (n-2)!} = \frac{n(n-1)}{2}$ and for verifying takes on average $\frac{n}{2}$, for a total complexity of $\theta (n^{3})$. Gram's method uses first sorts it and then it is a linear complexity.

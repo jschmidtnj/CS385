@@ -3,4 +3,3 @@
 !output.html
 *.pdf
 !output.pdf
-tex2pdf.*
