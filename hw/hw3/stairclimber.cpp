@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -54,22 +55,43 @@ void sort_by_column(vector<vector<int>> &arr, const int &num_stairs)
 /**
  * algorithm to get all the ways to climb the stairs
  */
-vector<vector<int>> get_ways(const int num_stairs)
+vector<vector<int>> _get_ways(const int num_stairs, unordered_map<int, vector<vector<int>>>& store)
 {
+  // if (store.count(num_stairs) > 0)
+  //   return store[num_stairs];
   vector<vector<int>> ways;
-  if (num_stairs <= 0)
+  if (num_stairs <= 0) {
     ways.push_back(vector<int>());
-  else
-    for (int i = 1; i <= 3; i++)
-      if (num_stairs >= i)
-      {
-        vector<vector<int>> result = get_ways(num_stairs - i);
-        for (long unsigned int j = 0; j < result.size(); j++)
-          result[j].push_back(i);
-        for (const vector<int> single_res : result)
-          ways.push_back(single_res);
+  } else {
+    for (int i = 1; i <= 3; i++) {
+      if (num_stairs >= i) {
+        vector<vector<int>> result = _get_ways(num_stairs - i, store);
+        for (vector<int>& res : result)
+          res.push_back(i);
+        store[num_stairs - i] = result;
+        ways.insert(ways.end(), result.begin(), result.end());
       }
+    }
+  }
   return ways;
+}
+
+/**
+ * helper function to pass in store for dynamic algorithm
+ */
+vector<vector<int>> get_ways(const int &num_stairs)
+{
+  unordered_map<int, vector<vector<int>>> store;
+  vector<vector<int>> res = _get_ways(num_stairs, store);
+  for (int i = 0; i < 5; i++) {
+    for (vector<int> res1 : store[i]) {
+      for (int res2 : res1) {
+        cout << res2 << ' ';
+      }
+      cout << '\n';
+    }
+  }
+  return res;
 }
 
 /**
