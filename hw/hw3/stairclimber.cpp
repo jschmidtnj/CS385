@@ -12,29 +12,48 @@
 
 using namespace std;
 
+/**
+ * swaps two int vectors
+ */
 void swap(vector<int>& x, vector<int>& y) {
   vector<int> temp = x;
   x = y;
   y = temp;
 }
 
-void sort_by_column(vector<vector<int>> &arr, const int &column)
+/**
+ * sorts the nested vector by column
+ */
+void sort_by_column(vector<vector<int>> &arr, const int &num_stairs)
 {
-  for (long unsigned int i = 0; i < arr.size(); i++) {
-    int swap_index = i;
-    for (long unsigned int j = i + 1; j < arr.size(); j++) {
-      if ((int)arr[i].size() >= (column + 1) && arr[j][column] < arr[swap_index][column]) {
-        if (column == 0 || arr[j][column] == arr[swap_index][column - 1])
-          swap_index = j;
-      }
+  for (int column = 0; column < num_stairs; column++)
+    for (long unsigned int i = 0; i < arr.size(); i++) {
+      int swap_index = i;
+      if ((int)arr[i].size() >= (column + 1))
+        for (long unsigned int j = i + 1; j < arr.size(); j++)
+          if ((int)arr[j].size() >= (column + 1) && arr[j][column] < arr[swap_index][column]) {
+            if (column == 0) {
+              swap_index = j;
+            } else {
+              bool swap_vals = true;
+              for (int k = column - 1; k >= 0; k--) {
+                if (arr[j][k] != arr[swap_index][k]) {
+                  swap_vals = false;
+                  break;
+                }
+              }
+              if (swap_vals)
+                swap_index = j;
+            }
+          }
+      if (swap_index != (int)i)
+        swap(arr[swap_index], arr[i]);
     }
-    if (swap_index != (int)i) {
-      cout << "swap " << swap_index << '\n';
-      swap(arr[swap_index], arr[i]);
-    }
-  }
 }
 
+/**
+ * algorithm to get all the ways to climb the stairs
+ */
 vector<vector<int>> get_ways(const int num_stairs)
 {
   vector<vector<int>> ways;
@@ -53,14 +72,32 @@ vector<vector<int>> get_ways(const int num_stairs)
   return ways;
 }
 
+/**
+ * num_digits gets the number of digits
+ * in a given int
+ */
+int num_digits(int num)
+{
+  int count;
+  for (count = 0; num > 0; count++)
+    num /= 10;
+  return count;
+}
+
+/**
+ * displays all the ways to climb the stairs
+ */
 void display_ways(const vector<vector<int>> &staircase_ways, const int num_stairs)
 {
   long unsigned int num_ways = staircase_ways.size();
   cout << num_ways << " way" << (num_ways != 1 ? "s" : "")
        << " to climb " << num_stairs << " stair"
        << (num_stairs != 1 ? "s" : "") << "." << endl;
+  const int max_num_width = num_digits(staircase_ways.size());
   for (long unsigned int i = 0; i < num_ways; i++)
   {
+    for (int j = 0; j < max_num_width - num_digits(i + 1); j++)
+      cout << ' ';
     cout << i + 1 << ". [";
     if (staircase_ways[i].size() > 0)
     {
@@ -78,7 +115,7 @@ int main(int argc, char *const argv[])
   // Calls other functions to produce correct output.
   if (argc != 2)
   {
-    cerr << "Usage: ./staircase <number of stairs>" << endl;
+    cerr << "Usage: ./stairclimber <number of stairs>" << endl;
     return 1;
   }
   int num_stairs;
@@ -89,7 +126,6 @@ int main(int argc, char *const argv[])
     return 1;
   }
   vector<vector<int>> staircase_ways = get_ways(num_stairs);
-  sort_by_column(staircase_ways, 0);
-  sort_by_column(staircase_ways, 1);
+  sort_by_column(staircase_ways, num_stairs);
   display_ways(staircase_ways, num_stairs);
 }
