@@ -94,9 +94,9 @@ page 76:
          2. $j = lg(n)$
       5. $x(n) = x(\frac{n}{2^{lg(n)}}) + \frac{2^{lg(n)}-1}{2^{lg(n)}} \cdot n$
          1. $x(n) = x(\frac{n}{n}) + \frac{2^{lg(n)} - 1}{n} \cdot n$
-         2. $x(n) = x(1) + \frac{n - 1}{n} \cdot n$
-         3. $x(n) = 1 + n - 1$
-         4. $x(n) = n$
+         2. $x(n) = x(1) + \frac{n - 1}{n} \cdot n \cdot 2$
+         3. $x(n) = 1 + 2n - 2$
+         4. $x(n) = 2n - 1$
    e. $x(n) = x(\frac{n}{3}) + 1$ for $n > 1, x(1) = 1$ (solve for $n = 3^{k}$)
       1. $x(3^{k}) = x(3^{k-1}) + 1$
       2. $x(3^{k-1}) = x(3^{k-2}) + 1$

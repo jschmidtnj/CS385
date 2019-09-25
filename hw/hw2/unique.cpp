@@ -27,11 +27,13 @@ bool all_unique_letters(const string &s) {
   // and bitshifting operators.
   // No credit will be given for other solutions.
   int vector = 0;
+  unsigned int current;
   for (const char currentChar: s) {
-    if ((1 << (currentChar - 'a')) & vector)
+    current = 1 << (currentChar - 'a');
+    if (current & vector)
       return false;
     else
-      vector |= 1 << (currentChar - 'a');
+      vector |= current;
   }
   return true;
 }
