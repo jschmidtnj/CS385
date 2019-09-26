@@ -15,7 +15,7 @@ static void swap(int array[], const int a, const int b)
 void bubble_sort(int array[], const int length)
 {
   int len = length;
-  while (len > 0)
+  while (len > 1)
   {
     int n = 0; // n represents the highest index where a swap occurred
     for (int i = 1; i < len; ++i)
