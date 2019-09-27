@@ -67,8 +67,8 @@ vector<vector<int>> _get_ways(const int num_stairs, unordered_map<int, vector<ve
       if (num_stairs >= i) {
         vector<vector<int>> result = _get_ways(num_stairs - i, store);
         for (vector<int>& res : result)
-          res.push_back(i);
-        store[num_stairs - i] = result;
+          res.insert(res.begin(), i);
+        // store[num_stairs - i] = result;
         ways.insert(ways.end(), result.begin(), result.end());
       }
     }
@@ -83,6 +83,7 @@ vector<vector<int>> get_ways(const int &num_stairs)
 {
   unordered_map<int, vector<vector<int>>> store;
   vector<vector<int>> res = _get_ways(num_stairs, store);
+  /*
   for (int i = 0; i < 5; i++) {
     for (vector<int> res1 : store[i]) {
       for (int res2 : res1) {
@@ -91,6 +92,7 @@ vector<vector<int>> get_ways(const int &num_stairs)
       cout << '\n';
     }
   }
+  */
   return res;
 }
 
@@ -115,7 +117,7 @@ void display_ways(const vector<vector<int>> &staircase_ways, const int num_stair
   cout << num_ways << " way" << (num_ways != 1 ? "s" : "")
        << " to climb " << num_stairs << " stair"
        << (num_stairs != 1 ? "s" : "") << "." << endl;
-  const int max_num_width = num_digits(staircase_ways.size());
+  const int max_num_width = num_digits((int)num_ways);
   for (long unsigned int i = 0; i < num_ways; i++)
   {
     for (int j = 0; j < max_num_width - num_digits(i + 1); j++)
