@@ -34,11 +34,10 @@ def get_ways_dyn(num_stairs, store):
   else:
     for i in range(1, 4):
       if num_stairs >= i:
-        if num_stairs - i in store:
+        if num_stairs in store:
           result = store[num_stairs - i]
         else:
           result = get_ways_dyn(num_stairs - i, store)
-        # if num_stairs - i == 0:
           # store[num_stairs - i] = result
         for j in range(len(result)):
           result[j].append(i)
