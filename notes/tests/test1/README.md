@@ -72,5 +72,8 @@
   // third is pass by value
   ```
 
-## recursive relations
+## final cheat sheet
 
+![front](./front.jpg "Front")
+
+![back](./back.jpg "Back")
