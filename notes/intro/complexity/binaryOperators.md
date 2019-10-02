@@ -1,6 +1,5 @@
 # binary operations
 
-
 ## example - check uniqueness
 
 a b c c
