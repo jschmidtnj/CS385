@@ -61,14 +61,14 @@ void WaterJugs::print_solution()
   {
     current = &_complete_state[steps.top()->levels[0]][steps.top()->levels[1]];
     int from_index = -1, to_index = -1, amount_poured;
-    for (long unsigned int i = 0; i < _capacities.size() - 1; i++)
+    for (long unsigned int i = 0; i < _capacities.size(); i++)
     {
       if (last->levels[i] != current->levels[i])
       {
-        if (last->levels[i] < current->levels[i])
+        if (last->levels[i] > current->levels[i])
         {
           from_index = i;
-          amount_poured = current->levels[i] - last->levels[i];
+          amount_poured = last->levels[i] - current->levels[i];
           if (to_index != -1)
             break;
         }
@@ -81,7 +81,7 @@ void WaterJugs::print_solution()
       }
     }
     cout << "Pour " << amount_poured << " gallon" << (amount_poured != 1 ? "s" : "")
-         << " from " << char(from_index + 66) << " to " << char(to_index + 66) << ". (";
+         << " from " << char(from_index + 65) << " to " << char(to_index + 65) << ". (";
     cout << current->levels[0];
     for (long unsigned int i = 1; i < _capacities.size(); i++)
       cout << ", " << current->levels[i];
@@ -92,12 +92,12 @@ void WaterJugs::print_solution()
 
 void WaterJugs::find_solution()
 {
-  _complete_state.resize(_capacities[2] + 1);
+  _complete_state.resize(_capacities[2]);
   for (vector<State> &second_state : _complete_state)
-    second_state.resize(_capacities[2] + 1);
+    second_state.resize(_capacities[2]);
   queue<State> mainqueue;
   mainqueue.push(State(vector<int>{0, 0, _capacities.back()}, NULL));
-  State last_state = mainqueue.front();
+  State last_state;
   while (mainqueue.size() > 0)
   {
     State current = mainqueue.front();
@@ -122,7 +122,6 @@ void WaterJugs::find_solution()
           int remaining_space = _capacities[j] - current.levels[j];
           int amount_poured = remaining_space - current.levels[i] > 0 ? current.levels[i] : remaining_space;
           vector<int> new_levels = current.levels;
-          new_levels.reserve(current.levels.size());
           new_levels[i] = current.levels[i] - amount_poured;
           new_levels[j] = current.levels[j] + amount_poured;
           mainqueue.push(State(new_levels, &_complete_state[current.levels[0]][current.levels[1]]));
