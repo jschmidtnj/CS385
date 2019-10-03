@@ -16,9 +16,10 @@ using namespace std;
 
 struct State
 {
+  State() {}
   State(vector<int> levels, State *parent) : levels(levels), parent(parent){};
   vector<int> levels;
-  State *parent;
+  State *parent = NULL;
 };
 
 class WaterJugs
@@ -30,7 +31,7 @@ public:
 private:
   vector<int> _capacities, _goals;
   vector<vector<State>> _complete_state;
-  State * _final_state = NULL;
+  State *_final_state = NULL;
   void find_solution();
 };
 
@@ -56,8 +57,9 @@ void WaterJugs::print_solution()
     steps.push(current);
   }
   State *last = &_complete_state[0][0];
-  for (State *current = steps.top(); steps.size() > 0; steps.pop())
+  for (State *current; steps.size() > 0; steps.pop())
   {
+    current = &_complete_state[steps.top()->levels[0]][steps.top()->levels[1]];
     int from_index = -1, to_index = -1, amount_poured;
     for (long unsigned int i = 0; i < _capacities.size() - 1; i++)
     {
@@ -92,44 +94,44 @@ void WaterJugs::find_solution()
 {
   _complete_state.resize(_capacities[2] + 1);
   for (vector<State> &second_state : _complete_state)
-    _complete_state.resize(_capacities[2] + 1);
-  queue<State> _mainqueue;
-  _mainqueue.push(State(vector<int>{0, 0, _capacities.back()}, NULL));
-  State *current = NULL;
-  while (_mainqueue.size() > 0)
+    second_state.resize(_capacities[2] + 1);
+  queue<State> mainqueue;
+  mainqueue.push(State(vector<int>{0, 0, _capacities.back()}, NULL));
+  State last_state = mainqueue.front();
+  while (mainqueue.size() > 0)
   {
-    current = &_mainqueue.front();
-    if (!_complete_state[current->levels[0]][current->levels[1]].levels.empty())
+    State current = mainqueue.front();
+    if (!_complete_state[current.levels[0]][current.levels[1]].levels.empty())
     {
-      _mainqueue.pop();
+      mainqueue.pop();
       continue;
     }
-    _complete_state[current->levels[0]][current->levels[1]] = *current;
-    if (current->levels == _goals)
+    _complete_state[current.levels[0]][current.levels[1]] = current;
+    if (current.levels == _goals)
     {
-      _mainqueue.pop();
+      _final_state = &_complete_state[current.levels[0]][current.levels[1]];
       break;
     }
     // c->a, c->b, b->a, b->c, a->b, a->c
-    for (int i = 0; i < current->levels.size(); i++)
+    for (unsigned long int i = 0; i < current.levels.size(); i++)
     {
-      for (int j = 0; j < current->levels.size(); j++)
+      for (unsigned long int j = 0; j < current.levels.size(); j++)
       {
-        if (i != j && current->levels[i] != 0 && current->levels[j] < _capacities[j])
+        if (i != j && current.levels[i] != 0 && current.levels[j] < _capacities[j])
         {
-          int remaining_space = _capacities[j] - current->levels[j];
-          int amount_poured = remaining_space - current->levels[i] > 0 ? current->levels[i] : remaining_space;
-          vector<int> new_levels = current->levels;
-          new_levels.reserve(current->levels.size());
-          new_levels[i] = current->levels[i] - amount_poured;
-          new_levels[j] = current->levels[j] + amount_poured;
-          _mainqueue.push(State(new_levels, &_complete_state[current->levels[i]][current->levels[j]]));
+          int remaining_space = _capacities[j] - current.levels[j];
+          int amount_poured = remaining_space - current.levels[i] > 0 ? current.levels[i] : remaining_space;
+          vector<int> new_levels = current.levels;
+          new_levels.reserve(current.levels.size());
+          new_levels[i] = current.levels[i] - amount_poured;
+          new_levels[j] = current.levels[j] + amount_poured;
+          mainqueue.push(State(new_levels, &_complete_state[current.levels[0]][current.levels[1]]));
         }
       }
     }
-    _mainqueue.pop();
+    mainqueue.pop();
+    last_state = current;
   }
-  _final_state = current;
 }
 
 int main(int argc, const char *argv[])
