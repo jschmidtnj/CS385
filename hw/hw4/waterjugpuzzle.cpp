@@ -14,14 +14,12 @@
 
 using namespace std;
 
-struct State
-{
-  State() {}
-  State(vector<int> levels, State *parent) : levels(levels), parent(parent){};
-  vector<int> levels;
-  State *parent = NULL;
-};
-
+/**
+ * WaterJugs class
+ * 
+ * contains methods for getting the solution to
+ * the waterjug problem and printing it
+ */
 class WaterJugs
 {
 public:
@@ -29,17 +27,40 @@ public:
   void print_solution();
 
 private:
+  /**
+   * State struct
+   * 
+   * used for storing the state of the waterjugs at a given time (current levels),
+   * and parent state
+   */
+  struct State
+  {
+    State() {}
+    State(vector<int> levels, State *parent) : levels(levels), parent(parent){};
+    vector<int> levels;
+    State *parent = NULL;
+  };
   vector<int> _capacities, _goals;
   vector<vector<State>> _complete_state;
   State *_final_state = NULL;
   void find_solution();
 };
 
+/**
+ * Waterjugs constructor
+ * 
+ * constructor by default finds the solution
+ */
 WaterJugs::WaterJugs(vector<int> capacities, vector<int> goals) : _capacities(capacities), _goals(goals)
 {
   find_solution();
 }
 
+/**
+ * Waterjugs print_solution
+ * 
+ * prints the solution of the Waterjug problem
+ */
 void WaterJugs::print_solution()
 {
   if (_final_state == NULL)
@@ -90,6 +111,11 @@ void WaterJugs::print_solution()
   }
 }
 
+/**
+ * Waterjugs find_solution
+ * 
+ * finds the solution to the waterjug problem
+ */
 void WaterJugs::find_solution()
 {
   _complete_state.resize(_capacities[2]);
@@ -112,7 +138,6 @@ void WaterJugs::find_solution()
       _final_state = &_complete_state[current.levels[0]][current.levels[1]];
       break;
     }
-    // c->a, c->b, b->a, b->c, a->b, a->c
     for (unsigned long int i = 0; i < current.levels.size(); i++)
     {
       for (unsigned long int j = 0; j < current.levels.size(); j++)
@@ -133,6 +158,11 @@ void WaterJugs::find_solution()
   }
 }
 
+/**
+ * main function
+ * 
+ * entry point
+ */
 int main(int argc, const char *argv[])
 {
   if (argc != 7)
