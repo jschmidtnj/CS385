@@ -23,7 +23,7 @@ using namespace std;
 class WaterJugs
 {
 public:
-  WaterJugs(vector<int> capacities, vector<int> goals);
+  explicit WaterJugs(vector<int> capacities, vector<int> goals);
   void print_solution();
 
 private:
@@ -35,8 +35,8 @@ private:
    */
   struct State
   {
-    State() {}
-    State(vector<int> levels, State *parent) : levels(levels), parent(parent){};
+    explicit State() {}
+    explicit State(vector<int> levels, State *parent) : levels(levels), parent(parent){};
     vector<int> levels;
     State *parent = NULL;
   };
