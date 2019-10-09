@@ -34,6 +34,38 @@ vector<vector<int>> get_ways(const int num_stairs)
   return ways;
 }
 
+unsigned int tribonacci(int n) {
+  unsigned memo[41];
+  memo[0] = 1;
+  memo[1] = 1;
+  memo[2] = 2;
+  for (int i = 3; i <= n; i++) {
+    memo[i] = memo[i-1]  + memo[i-2] + memo[i-3];
+  }
+  return memo[n];
+}
+
+void get_ways_helper(int num_stairs, vector<vector<int>> &ways, vector<int> &way) {
+  if (num_stairs == 0) {
+    ways.push_back(way);
+    return;
+  }
+  for (int i = 1, end = min(num_stairs, 3); i<=end; i++) {
+    way.push_back(i);
+    get_ways_helper(num_stairs - i, ways, way);
+    way.pop_back();
+  }
+}
+
+vector<vector<int>> get_ways_2(int num_stairs) {
+  vector<vector<int>> ways;
+  ways.reserve(tribonacci(num_stairs));
+  vector<int> way;
+  ways.reserve(num_stairs);
+  get_ways_helper(num_stairs, ways, way);
+  return ways;
+}
+
 /**
  * num_digits gets the number of digits
  * in a given int
@@ -46,6 +78,9 @@ int num_digits(int num)
   return count;
 }
 
+// to write an int, reverse the digits, then mod by 10, divide by 10
+// and write each character using function below
+// putchar_unlocked(' '); is the fastest way to output to the screen
 /**
  * displays all the ways to climb the stairs
  */
@@ -87,6 +122,8 @@ int main(int argc, char *const argv[])
     cerr << "Error: Number of stairs must be a positive integer." << endl;
     return 1;
   }
-  vector<vector<int>> staircase_ways = get_ways(num_stairs);
-  display_ways(staircase_ways, num_stairs);
+  // vector<vector<int>> staircase_ways = get_ways(num_stairs);
+  // display_ways(staircase_ways, num_stairs);
+  vector<vector<int>> staircase_ways_2 = get_ways_2(num_stairs);
+  display_ways(staircase_ways_2, num_stairs);
 }
