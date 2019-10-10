@@ -41,6 +41,7 @@ private:
     State *parent = NULL;
   };
   vector<int> _capacities, _goals;
+  // in the future make this a flat vector to allow for more dimensions
   vector<vector<State>> _complete_state;
   State *_final_state = NULL;
   void find_solution();
@@ -170,12 +171,14 @@ int main(int argc, const char *argv[])
     cerr << "Usage: ./waterjugpuzzle <cap A> <cap B> <cap C> <goal A> <goal B> <goal C>" << endl;
     return -1;
   }
+  int num_jugs = (argc - 1) / 2;
   istringstream iss;
   vector<int> capacities;
-  for (int i = 1; i <= 3; i++)
+  capacities.reserve(num_jugs);
+  int current;
+  for (int i = 1; i <= num_jugs; i++)
   {
     iss.str(argv[i]);
-    int current;
     if (!((iss >> current) && ((i == 3 && current > 0) || (i != 3 && current >= 0))))
     {
       cerr << "Error: Invalid capacity \'" << argv[i] << "\' for jug " << char(i + 64) << '.' << endl;
@@ -185,10 +188,10 @@ int main(int argc, const char *argv[])
     iss.clear();
   }
   vector<int> goals;
-  for (int i = 4; i <= 6; i++)
+  goals.reserve(num_jugs);
+  for (int i = 1 + num_jugs; i <= 2 * num_jugs; i++)
   {
     iss.str(argv[i]);
-    int current;
     if (!((iss >> current) && current >= 0))
     {
       cerr << "Error: Invalid goal \'" << argv[i] << "\' for jug " << char(i + 61) << '.' << endl;
@@ -210,7 +213,7 @@ int main(int argc, const char *argv[])
     goals_sum += goal;
   if (capacities.back() != goals_sum)
   {
-    cerr << "Error: Total gallons in goal state must be equal to the capacity of jug C." << endl;
+    cerr << "Error: Total gallons in goal state must be equal to the capacity of jug " << char(num_jugs + 64) << "." << endl;
     return -1;
   }
   WaterJugs jugs(capacities, goals);
