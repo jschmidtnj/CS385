@@ -26,3 +26,26 @@ for decrease and conquer (subtracting in recursive call), use backwards substitu
   - add new permutation to list
 - n! outputs, runtime is Theta(n*n!)
 - balloon = 7!/(2!2!) permutations
+
+## BRGC - generates the binary reflected gray code of order n
+
+- BRGC(3)
+  - BRGC(2)
+    - BRGC(1) -> ['0', '1']
+  - L1 = ['0', '1'] -> ['00', '01']
+  - L2 = ['1', '0'] -> ['11', '10']
+  - L1 = ['00', '01', '11', '10']
+- L1 = ['00', '01', '11', '10'] -> ['000', '001', '011', '010']
+- L2 = ['10', '11', '01', '00'] -> ['110', '111', '101', '100']
+- L1 = ['000', '001', '010', '011', '100', 101', '110', '111']
+
+time complexity: $T(n) = 1 \cdot T(n - 1) + \theta(2^{n})$
+
+0. $T(n-1) = T(n-2) + 2^{n  - 1}$
+1. $T(n) = T(n-2) + 2^{n-1} + 2^{n}$
+2. $T(n) = T(n-3) + 2^{n-2} + 2^{n-1} + 2^{n}$
+3. $T(n) = T(n-k) + 2^{n-k+1} + 2^{n-k-2} + ... + 2^{n}$
+4. $T(1) = 2$ $n-k=1$ $n - 1$
+5. $T(n) = T(n-(n-1)) + 2^{n-(n-1)+1} + 2^{n-(n-1)+2} + 2^{n}$
+   1. $= 2^{1} + 2^{2} + 2^{3} + ... + 2^{n}$
+   2. $T(n) = 2^{n+1} - 2$
