@@ -82,7 +82,7 @@ void WaterJugs::print_solution()
   for (State *current; steps.size() > 0; steps.pop())
   {
     current = &_complete_state[steps.top()->levels[0]][steps.top()->levels[1]];
-    int from_index = -1, to_index = -1, amount_poured;
+    int from_index = -1, to_index = -1, amount_poured = 0;
     for (long unsigned int i = 0; i < _capacities.size(); i++)
     {
       if (last->levels[i] != current->levels[i])
