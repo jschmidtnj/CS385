@@ -1,0 +1,5 @@
+# ignore executable
+inversioncounter
+
+# ignore output files
+*.txt
