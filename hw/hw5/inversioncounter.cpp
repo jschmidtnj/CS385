@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Name        : inversioncounter.cpp
- * Author      :
+ * Author      : Joshua Schmidt
  * Version     : 1.0
- * Date        :
+ * Date        : 10/25/2019
  * Description : Counts the number of inversions in an array.
- * Pledge      :
+ * Pledge      : I pledge my honor that I have abided by the Stevens Honor System.
  ******************************************************************************/
 #include <iostream>
 #include <algorithm>
