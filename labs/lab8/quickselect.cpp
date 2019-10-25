@@ -31,6 +31,10 @@ void swap(int array[], int index1, int index2)
  * gets a partition for the array
  * first makes it a bit faster by getting the median
  * of the array
+ * 
+ * everything to the left is less than, everything to the right
+ * is greater than or equal to
+ * this runs in nlog(n)
  */
 size_t lomuto_partition(int array[], size_t left, size_t right)
 {
@@ -67,6 +71,15 @@ size_t lomuto_partition(int array[], size_t left, size_t right)
   return s;
 }
 
+int recursive_quick_select(int array[], int left, int right, int k) {
+  int s = lomuto_partition(array, left, right);
+  if (s == k - 1)
+    return array[s];
+  if (s > k - 1)
+    return recursive_quick_select(array, left, s - 1, k);
+  return recursive_quick_select(array, s + 1, right, k);
+}
+
 /**
  * quick_select
  * 
@@ -98,7 +111,7 @@ int quick_select(int array[], size_t left, size_t right, size_t k)
  */
 int quick_select(int array[], const size_t length, size_t k)
 {
-  return quick_select(array, 0, length - 1, k);
+  return recursive_quick_select(array, 0, length - 1, k);
 }
 
 /**
