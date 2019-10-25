@@ -3,7 +3,7 @@
 - $T(n) = a \cdot T(\frac{n}{b}) + f(n)$
   - a = num times the recursive call made in single function exec
   - b = constant factor by which the input size is divided
-  - f(n) = amount of work performed in the function excluding any recursive calls
+  - f(n) -> d = amount of work performed in the function excluding any recursive calls
 - if $a < b^{d}$, $T(n) \exists \theta (n^{d})$
 - if $a = b^{d}$, $T(n) \exists \theta (n^{d} \cdot log_{b} (n))$
 - if $a > b^{d}$, $T(n) \exists \theta (n^{log_{b} (a)})$
