@@ -37,6 +37,34 @@ long count_inversions_slow(int array[], int length)
 }
 
 /**
+ * borowski's implementation
+ * 
+ * based on the pseudocode given
+ * slightly less complicated, but less straight-forward
+ */
+static long mergesort2(int array[], int scratch[], int low, int high) {
+  long count = 0L;
+  if (low < high) {
+    int mid = low + (high - low) / 2;
+    int L = low, H = mid + 1;
+    count += mergesort2(array, scratch, L, mid);
+    count += mergesort2(array, scratch, H, high);
+    for (int k = low; k <= high; k++)
+      if (L <= mid && (H > high || array[L] <= array[H])) {
+        scratch[k] = array[L];
+        L++;
+      } else {
+        scratch[k] = array[H];
+        H++;
+        count += mid - L + 1;
+      }
+    for (int k = low; k <= high; k++)
+      array[k] = scratch[k];
+  }
+  return count;
+}
+
+/**
  * merge helper function used in mergesort
  * merges the unsorted arrays and returns the
  * number of inversions for a given array,
