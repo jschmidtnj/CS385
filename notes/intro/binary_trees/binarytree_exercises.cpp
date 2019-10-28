@@ -28,14 +28,14 @@ Node *lowest_common_ancestor(Node *p, Node *q)
   return lowest_common_ancestor(p->parent, q->parent);
 }
 
-Node *create_bst_helper(int data[], int low, int high, int level)
+Node *create_bst_helper(int data[], int low, int high, int level, Node *parent)
 {
   if (low > high)
     return nullptr;
-  int mid = high - low;
-  Node* root = new Node(level, data[mid]);
-  root->left = create_bst_helper(data, low, mid - 1, level + 1);
-  root->right = create_bst_helper(data, mid + 1, high, level + 1);
+  int mid = low + (high - low) / 2;
+  Node* root = new Node(parent, level, data[mid]);
+  root->left = create_bst_helper(data, low, mid - 1, level + 1, root);
+  root->right = create_bst_helper(data, mid + 1, high, level + 1, root);
   return root;
 }
 
@@ -46,12 +46,16 @@ Node *create_bst(int data[], int length)
   // make the root the midpoint of the array. then recursively call it
   // on the left side, and whatever it returns is the root of the left
   // sub tree
-  return create_bst_helper(data, 0, length - 1, 0);
+  return create_bst_helper(data, 0, length - 1, 0, nullptr);
 }
 
 bool is_bst(Node *n, int *min, int *max)
 {
-  return false;
+  if (n == nullptr)
+    return true;
+  if ((min != nullptr && n->data <= *min) || (max != nullptr && n->data >= *max))
+    return false;
+  return is_bst(n->left, min, &n->data) && is_bst(n->right, &n->data, max);
 }
 
 bool is_bst(Node *tree)
