@@ -22,7 +22,7 @@ for i ← l + 1 to r do
 ```
 
 - p = 4
-- 4 5 21 11 7 8
+- 4 5 2 1 11 7 8
 - 1 2 4 5 11 7 8
 - this partitions to move everything less than 4 on the left and everything greater than or equal to 4 on the right
 - Theta(n)
@@ -48,12 +48,10 @@ else Quickselect(A[s + 1..r], k − 1 − s)
 ## quicksort
 
 ```bash
-ALGORITHM Quicksort(A[l..r])
-  //Sorts a subarray by quicksort
-  //Input: Subarray of array A[0..n − 1], defined by its left and right
-  //
-  indices l and r
-  //Output: Subarray A[l..r] sorted in  nondecreasing order
+# ALGORITHM Quicksort(A[l..r])
+  # Sorts a subarray by quicksort
+  # Input: Subarray of array A[0..n − 1], defined by its left and right indices l and r
+  # Output: Subarray A[l..r] sorted in  nondecreasing order
   if l < r
     s ←Partition(A[l..r]) //s is a split position
     Quicksort(A[l..s − 1])

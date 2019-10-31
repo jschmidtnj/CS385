@@ -20,7 +20,7 @@ for decrease and conquer (subtracting in recursive call), use backwards substitu
 - initialize first with 12 ... n
 - while last permutation has 2 consecutive elements in increasing order
   - i = first index where 2 elements are in increasing order
-  - j = largest index j where a[i] > a[j]
+  - j = largest index j where a[j] > a[i]
   - swap ai and aj
   - reverse order of elements from i+1 to n
   - add new permutation to list
