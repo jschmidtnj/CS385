@@ -4,9 +4,9 @@
 
 Name: Joshua Schmidt, Date: 10/31/19
 
-1. Consider the algorithm on page 148 in the textbook for binary reflected Gray codes. What change(s) would you make so that it generates the binary numbers in order for a given length n? Your algorithm must be recursive and keep the same structure as the one in the textbook. Describe only the change(s). (10 points)
+1. Consider the algorithm on page 148 in the textbook for binary reflected gray codes. What change(s) would you make so that it generates the binary numbers in order for a given length n? Your algorithm must be recursive and keep the same structure as the one in the textbook. Describe only the change(s). (10 points)
 
-In order to output the binary reflected Gray code in order, the only change needed would be to copy list $L1$ to $L2$ in the same order, instead of reversing it. So the final algorithm would be as follows:
+In order to output the binary reflected gray code in order, the only change needed would be to copy list $L1$ to $L2$ in the same order, instead of reversing it. So the final algorithm would be as follows:
 
 pseudocode:
 
@@ -52,12 +52,12 @@ def brgc(n):
 
 72 x 93 = 5952 + 744 = 6696
 
-1. Suppose you use the LomutoPartition() function on page 159 in the textbook in your
+3. Suppose you use the LomutoPartition() function on page 159 in the textbook in your
 implementation of quicksort. (10 points, 5 points each)
 
 a. Describe the types of input that cause quicksort to perform its worst-case running time.
 
-Arrays that are reverse-sorted have the worst running time for LomutoPartiton() and QuickSort. This is because the pivot is taken as the left most element in the array during each call to QuickSort. Because the left most element is the largest element for each sub-array, there will be a swap for each element in the sub arrays. This results in the worst-case running time of $\theta (n^{2})$.
+Arrays that are reverse-sorted, already-sorted, or have all the same elements have the worst running time for QuickSort with LomutoPartiton. This is because the pivot is taken as the left most element in the array during each call to QuickSort. The resulting recursive calls will have an index for the pivot skewed to one side of the array, resulting in more recursive calls for the given input --- the pivot essentially does nothing helpful. This results in the worst-case running time of $\theta (n^{2})$.
 
 b. What is that running time?
 
@@ -91,9 +91,9 @@ values of c2, c1, and c0. Do not skip steps. (10 points)
 
 5. Draw the binary search tree after inserting the following keys: 24 18 67 68 69 25 19 20 11 93 (10 points)
 
-![Binary Search Tree](./bst.png "BST")
+![Resulting Balanced Binary Search Tree](./bst.png "BST")
 
-1. Consider the following binary tree. (16 points, 2 points each)
+6. Consider the following binary tree. (16 points, 2 points each)
 
 ![Binary Search Tree](./given_bst.png "Given BST")
 
