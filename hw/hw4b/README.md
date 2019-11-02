@@ -57,7 +57,7 @@ implementation of quicksort. (10 points, 5 points each)
 
 a. Describe the types of input that cause quicksort to perform its worst-case running time.
 
-Arrays that are reverse-sorted, already-sorted, or have all the same elements have the worst running time for QuickSort with LomutoPartiton. This is because the pivot is taken as the left most element in the array during each call to QuickSort. The resulting recursive calls will have an index for the pivot skewed to one side of the array, resulting in more recursive calls for the given input --- the pivot essentially does nothing helpful. This results in the worst-case running time of $\theta (n^{2})$.
+Arrays that are reverse-sorted, already-sorted, or have all the same elements have the worst running time for QuickSort with LomutoPartiton. This is because the pivot is taken as the left-most element in the array during each call to QuickSort. The resulting recursive calls will have an index for the pivot skewed to one side of the array, resulting in more recursive calls for the given input. The number of swaps is greater for a reverse-sorted array ($\frac{n \cdot (n+1)}{2}$) than for a sorted array, but the overall running time is the same, at $\theta (n^{2})$.
 
 b. What is that running time?
 
@@ -91,7 +91,11 @@ values of c2, c1, and c0. Do not skip steps. (10 points)
 
 5. Draw the binary search tree after inserting the following keys: 24 18 67 68 69 25 19 20 11 93 (10 points)
 
-![Resulting Balanced Binary Search Tree](./bst.png "BST")
+![Unbalanced Binary Search Tree](./bst_unbalanced.png "BST")
+
+<!--
+![Balanced Binary Search Tree](./bst.png "BST")
+-->
 
 6. Consider the following binary tree. (16 points, 2 points each)
 
