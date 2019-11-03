@@ -1,0 +1,6 @@
+# ignore executable
+anagramfinder
+
+# ignore txt files
+*.txt
+!dictionary.txt
