@@ -16,6 +16,8 @@
 #include <bits/stdc++.h>
 #include <random>
 
+#define NUM_CHARS 26
+
 /**
  * class for finding anagrams
  */
@@ -32,7 +34,6 @@ private:
   std::default_random_engine generator;
   std::unordered_map<std::string, std::vector<std::string>> words;
   std::vector<std::string> mostAnagramKeys;
-  static bool compareChars(char &elem2, char &elem1);
   void swapStrings(std::string &elem1, std::string &elem2);
   long partitionKeys(std::string keys[], long left, long right);
   void quickSortKeys(std::string keys[], long left, long right);
@@ -115,33 +116,23 @@ void FindAnagrams::quickSortKeys(std::string keys[], long left, long right)
 }
 
 /**
- * compareChars
- * 
- * compare characters, with the letters being
- * the same for upper and lowercase
- */
-bool FindAnagrams::compareChars(char &elem2, char &elem1)
-{
-  if (elem1 >= 'a' && elem1 <= 'z')
-  {
-    elem1 = elem1 - 'a' + 'A';
-  }
-  if (elem2 >= 'a' && elem2 <= 'z')
-  {
-    elem2 = elem2 - 'a' + 'A';
-  }
-  return elem2 < elem1;
-}
-
-/**
  * getSortedKey
  * 
  * gets the sorted key for a given word
  */
 std::string FindAnagrams::getSortedKey(std::string word)
 {
-  std::sort(word.begin(), word.end(), compareChars);
-  return word;
+  int charCount[NUM_CHARS] = {0};
+  for (int i = 0; i < (int)word.length(); i++)
+    if (word[i] >= 'a' && word[i] <= 'z')
+      charCount[word[i] - 'a']++;
+    else if (word[i] >= 'A' && word[i] <= 'Z')
+      charCount[word[i] - 'A']++;
+  std::stringstream ss;
+  for (int i = 0; i < NUM_CHARS; i++)
+    for (int j = 0; j < charCount[i]; j++)
+      ss << (char)('a' + i);
+  return ss.str();
 }
 
 /**
