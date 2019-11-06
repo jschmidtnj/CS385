@@ -233,8 +233,10 @@ public:
   {
     const K &key = key_value.first;
     if (find(key) != end()) {
-      std::cout << "Warning: Attempt to insert duplicate key '" << key << "'.\n";
-      return;
+      std::string error_message = "Warning: Attempt to insert duplicate key '";
+      error_message += key;
+      error_message += "'.\n";
+      throw tree_exception(error_message);
     }
     Node<K, V> *x, *y;
     if (it != end())
