@@ -7,3 +7,21 @@
 - rotating a node left or right is $\theta (1)$
 - inserting is $\theta (lg(n))$
 - [very cool](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+- the number of black nodes on any simple path from, but not including, a node x down to a leaf is called the __black-height__ of a node.
+- lemma: a red-black tree with n internal nodes has height at most $2 \cdot lg(n + 1)$
+- we start by showing that the subtree rooted at any node x contains at least $2^{BlackHeight(x)} - 1$ internal nodes
+- proof (with induction):
+  - induction on the height of x
+  - base case:
+    - height = 0 => x is a leaf
+    - $2^{BlackHeight(x)} - 1 = 2^{0} - 1 = 0$ internal nodes
+  - inductive hypothesis: Assume it works for any node x of positive height, that is, x has at least $2^{BlackHeight(x)} - 1$ internal nodes
+  - inductive step:
+    - internal node x with 2 children
+    - height of child of x < height of x itself => (implies) each child has at least $2^{BlackHeight(x) - 1} - 1$ internal nodes
+    - Then, the subtree rooted at x contains at least $(2^{BlackHeight(x) - 1} - 1) + (2^{BlackHeight(x) - 1} - 1) + 1 = 2 \cdot 2^{BlackHeight(x) - 1} - 1 = 2^{BlackHeight(x)} - 1$
+    - let h be the height of the tree. by property 4, at least half the nodes from the root to a leaf (not including the root) must be black
+    - black-height of the root must be $>= \frac{h}{2}$ => $n >= 2^{\frac{h}{2}} - 1$
+      - $n + 1 >= 2^{\frac{h}{2}}$
+      - $lg(n + 1) >= \frac{h}{2}$
+      - $h <= 2 \cdot lg(n + 1)$
