@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Name        : rbtree.h
- * Author      : 
+ * Author      : Joshua Schmidt and Alex Rubino
  * Version     : 1.0
- * Date        : 
+ * Date        : 11/6/2019
  * Description : Implementation of red-black tree.
- * Pledge      :
+ * Pledge      : I pledge my honor that I have abided by the Stevens Honor System.
  ******************************************************************************/
 #ifndef RBTREE_H_
 #define RBTREE_H_
@@ -19,6 +19,7 @@
 #include <sstream>
 #include <algorithm>
 #include <utility>
+#include <sstream>
 
 // Forward declaration
 template <typename K, typename V>
@@ -232,11 +233,11 @@ public:
   void insert(const iterator &it, const std::pair<K, V> &key_value)
   {
     const K &key = key_value.first;
-    if (find(key) != end()) {
-      std::string error_message = "Warning: Attempt to insert duplicate key '";
-      error_message += key;
-      error_message += "'.\n";
-      throw tree_exception(error_message);
+    if (find(key) != end())
+    {
+      std::stringstream error_message_ss;
+      error_message_ss << "Attempt to insert duplicate key '" << key << "'.";
+      throw tree_exception(error_message_ss.str());
     }
     Node<K, V> *x, *y;
     if (it != end())
@@ -268,7 +269,7 @@ public:
     z->left = NULL;
     z->right = NULL;
     z->color = RED;
-    // insert_fixup(z);
+    insert_fixup(z);
     size_++;
   }
 
@@ -446,49 +447,53 @@ private:
   {
     while (z->parent != NULL && z->parent->color == RED)
     {
-      if (z->parent->parent != NULL)
+      if (z->parent == z->parent->parent->left)
       {
-        if (z->parent == z->parent->parent->left)
+        Node<K, V> *y = z->parent->parent->right;
+        if (y != NULL && y->color == RED)
         {
-          Node<K, V> *y = z->parent->parent->right;
-          if (y->color == RED)
+          z->parent->color = BLACK;
+          y->color = BLACK;
+          z->parent->parent->color = RED;
+          z = z->parent->parent;
+        }
+        else
+        {
+          if (z == z->parent->right)
           {
-            z->parent->color = BLACK;
-            y->color = BLACK;
-            z->parent->parent->color = RED;
-            z = z->parent->parent;
+            z = z->parent;
+            left_rotate(z);
           }
-          else
+          z->parent->color = BLACK;
+          if (z->parent->parent != NULL)
           {
-            if (z == z->parent->right)
-            {
-              z = z->parent;
-              left_rotate(z);
-            }
-            z->parent->color = BLACK;
             z->parent->parent->color = RED;
             right_rotate(z->parent->parent);
           }
         }
+      }
+      else
+      {
+        Node<K, V> *y = z->parent->parent->left;
+        if (y != NULL && y->color == RED)
+        {
+          z->parent->color = BLACK;
+          y->color = BLACK;
+          z->parent->parent->color = RED;
+          z = z->parent->parent;
+        }
         else
         {
-          Node<K, V> *y = z->parent->parent->left;
-          if (y != NULL) {
-            if (y->color == RED)
+          if (z == z->parent->left)
+          {
+            z = z->parent;
+            right_rotate(z);
+          }
+          if (z->parent != NULL)
+          {
+            z->parent->color = BLACK;
+            if (z->parent->parent != NULL)
             {
-              z->parent->color = BLACK;
-              y->color = BLACK;
-              z->parent->parent->color = RED;
-              z = z->parent->parent;
-            }
-            else
-            {
-              if (z == z->parent->left)
-              {
-                z = z->parent;
-                right_rotate(z);
-              }
-              z->parent->color = BLACK;
               z->parent->parent->color = RED;
               left_rotate(z->parent->parent);
             }
