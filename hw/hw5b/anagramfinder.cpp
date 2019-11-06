@@ -15,7 +15,6 @@
 #include <sstream>
 #include <bits/stdc++.h>
 #include <random>
-#include <stdexcept>
 
 #define MAP_SIZE 150000 // default size of map
 #define MAX_CHAR 127 // max ascii character
