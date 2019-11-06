@@ -15,6 +15,11 @@
 #include <sstream>
 #include <bits/stdc++.h>
 #include <random>
+#include <stdexcept>
+
+#define MAP_SIZE 150000 // default size of map
+#define MAX_CHAR 127 // max ascii character
+#define MIN_CHAR 0 // min ascii character
 
 /**
  * class for finding anagrams
@@ -32,7 +37,6 @@ private:
   std::default_random_engine generator;
   std::unordered_map<std::string, std::vector<std::string>> words;
   std::vector<std::string> mostAnagramKeys;
-  static bool compareChars(char &elem2, char &elem1);
   void swapStrings(std::string &elem1, std::string &elem2);
   long partitionKeys(std::string keys[], long left, long right);
   void quickSortKeys(std::string keys[], long left, long right);
@@ -115,32 +119,19 @@ void FindAnagrams::quickSortKeys(std::string keys[], long left, long right)
 }
 
 /**
- * compareChars
- * 
- * compare characters, with the letters being
- * the same for upper and lowercase
- */
-bool FindAnagrams::compareChars(char &elem2, char &elem1)
-{
-  if (elem1 >= 'a' && elem1 <= 'z')
-  {
-    elem1 = elem1 - 'a' + 'A';
-  }
-  if (elem2 >= 'a' && elem2 <= 'z')
-  {
-    elem2 = elem2 - 'a' + 'A';
-  }
-  return elem2 < elem1;
-}
-
-/**
  * getSortedKey
  * 
  * gets the sorted key for a given word
  */
 std::string FindAnagrams::getSortedKey(std::string word)
 {
-  std::sort(word.begin(), word.end(), compareChars);
+  for (unsigned long i = 0; i < word.length(); i++) {
+    if (word[i] > MAX_CHAR || word[i] < MIN_CHAR)
+      return "";
+    if (word[i] >= 'a' && word[i] <= 'z')
+      word[i] = word[i] - 'a' + 'A';
+  }
+  std::sort(word.begin(), word.end(), std::less<char>());
   return word;
 }
 
@@ -152,6 +143,7 @@ std::string FindAnagrams::getSortedKey(std::string word)
  */
 FindAnagrams::FindAnagrams(std::string filename)
 {
+  words.reserve(MAP_SIZE);
   dictionaryFilename = filename;
   std::ifstream dictionaryFile(dictionaryFilename);
   std::string word;
@@ -159,6 +151,8 @@ FindAnagrams::FindAnagrams(std::string filename)
   {
     // std::cout << line << std::endl;
     std::string key = getSortedKey(word);
+    if (key.length() == 0)
+      continue;
     words[key].push_back(word);
     if (words[key].size() < mostAnagrams)
       continue;
