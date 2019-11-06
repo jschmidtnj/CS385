@@ -243,7 +243,25 @@ public:
       x = root_;
       y = NULL;
     }
-    // TODO
+    while (x != NULL) {
+      y = x;
+      if (key < x->key())
+        x = x->left;
+      else
+        x = x->right;
+    }
+    Node<K, V> * z = new Node<K, V>(key, key_value.second);
+    z->parent = y;
+    if (y == NULL)
+      root_ = z;
+    else if (key < y->key())
+      y->left = z;
+    else
+      y->right = z;
+    z->left = NULL;
+    z->right = NULL;
+    z->color = RED;
+    insert_fixup(z);
   }
 
   /**
@@ -424,7 +442,7 @@ private:
         Node<K, V> *y = z->parent->parent->right;
         if (y->color == RED)
         {
-          z->parent->color == BLACK;
+          z->parent->color = BLACK;
           y->color = BLACK;
           z->parent->parent->color = RED;
           z = z->parent->parent;
@@ -446,7 +464,7 @@ private:
         Node<K, V> *y = z->parent->parent->left;
         if (y->color == RED)
         {
-          z->parent->color == BLACK;
+          z->parent->color = BLACK;
           y->color = BLACK;
           z->parent->parent->color = RED;
           z = z->parent->parent;
@@ -515,7 +533,7 @@ private:
   {
     if (node == NULL)
       return -1;
-    return 1 + max(height(node->left), height(node->right));
+    return 1 + std::max(height(node->left), height(node->right));
   }
 
   /**
@@ -564,8 +582,8 @@ private:
         left_height = height(node->left),
         right_height = height(node->right),
         current_diameter = left_height + right_height + 1,
-        max_diameter = max(left_diameter, right_diameter);
-    return max(current_diameter, max_diameter);
+        max_diameter = std::max(left_diameter, right_diameter);
+    return std::max(current_diameter, max_diameter);
   }
 
   /**
