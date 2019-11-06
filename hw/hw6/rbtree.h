@@ -232,6 +232,10 @@ public:
   void insert(const iterator &it, const std::pair<K, V> &key_value)
   {
     const K &key = key_value.first;
+    if (find(key) != end()) {
+      std::cout << "Warning: Attempt to insert duplicate key '" << key << "'.\n";
+      return;
+    }
     Node<K, V> *x, *y;
     if (it != end())
     {
@@ -243,14 +247,15 @@ public:
       x = root_;
       y = NULL;
     }
-    while (x != NULL) {
+    while (x != NULL)
+    {
       y = x;
       if (key < x->key())
         x = x->left;
       else
         x = x->right;
     }
-    Node<K, V> * z = new Node<K, V>(key, key_value.second);
+    Node<K, V> *z = new Node<K, V>(key, key_value.second);
     z->parent = y;
     if (y == NULL)
       root_ = z;
@@ -261,7 +266,8 @@ public:
     z->left = NULL;
     z->right = NULL;
     z->color = RED;
-    insert_fixup(z);
+    // insert_fixup(z);
+    size_++;
   }
 
   /**
@@ -423,10 +429,11 @@ private:
    */
   void delete_tree(Node<K, V> *n)
   {
-    if (n == NULL)
-      return;
-    delete_tree(n->left);
-    delete_tree(n->right);
+    if (n != NULL)
+    {
+      delete_tree(n->left);
+      delete_tree(n->right);
+    }
     delete n;
   }
 
@@ -435,50 +442,55 @@ private:
    */
   void insert_fixup(Node<K, V> *z)
   {
-    while (z->parent->color == RED)
+    while (z->parent != NULL && z->parent->color == RED)
     {
-      if (z->parent == z->parent->parent->left)
+      if (z->parent->parent != NULL)
       {
-        Node<K, V> *y = z->parent->parent->right;
-        if (y->color == RED)
+        if (z->parent == z->parent->parent->left)
         {
-          z->parent->color = BLACK;
-          y->color = BLACK;
-          z->parent->parent->color = RED;
-          z = z->parent->parent;
+          Node<K, V> *y = z->parent->parent->right;
+          if (y->color == RED)
+          {
+            z->parent->color = BLACK;
+            y->color = BLACK;
+            z->parent->parent->color = RED;
+            z = z->parent->parent;
+          }
+          else
+          {
+            if (z == z->parent->right)
+            {
+              z = z->parent;
+              left_rotate(z);
+            }
+            z->parent->color = BLACK;
+            z->parent->parent->color = RED;
+            right_rotate(z->parent->parent);
+          }
         }
         else
         {
-          if (z == z->parent->right)
-          {
-            z = z->parent;
-            left_rotate(z);
+          Node<K, V> *y = z->parent->parent->left;
+          if (y != NULL) {
+            if (y->color == RED)
+            {
+              z->parent->color = BLACK;
+              y->color = BLACK;
+              z->parent->parent->color = RED;
+              z = z->parent->parent;
+            }
+            else
+            {
+              if (z == z->parent->left)
+              {
+                z = z->parent;
+                right_rotate(z);
+              }
+              z->parent->color = BLACK;
+              z->parent->parent->color = RED;
+              left_rotate(z->parent->parent);
+            }
           }
-          z->parent->color = BLACK;
-          z->parent->parent->color = RED;
-          right_rotate(z->parent->parent);
-        }
-      }
-      else
-      {
-        Node<K, V> *y = z->parent->parent->left;
-        if (y->color == RED)
-        {
-          z->parent->color = BLACK;
-          y->color = BLACK;
-          z->parent->parent->color = RED;
-          z = z->parent->parent;
-        }
-        else
-        {
-          if (z == z->parent->left)
-          {
-            z = z->parent;
-            right_rotate(z);
-          }
-          z->parent->color = BLACK;
-          z->parent->parent->color = RED;
-          left_rotate(z->parent->parent);
         }
       }
     }
@@ -546,10 +558,7 @@ private:
       return 0;
     if (node->left == NULL && node->right == NULL)
       return 1;
-    size_t res = 0;
-    res += leaf_count(node->left);
-    res += leaf_count(node->right);
-    return res;
+    return leaf_count(node->left) + leaf_count(node->right);
   }
 
   /**
@@ -561,10 +570,7 @@ private:
   {
     if (node == NULL || (node->left == NULL && node->right == NULL))
       return 0;
-    size_t res = 1;
-    res += leaf_count(node->left);
-    res += leaf_count(node->right);
-    return res;
+    return 1 + internal_node_count(node->left) + internal_node_count(node->right);
   }
 
   /**
@@ -579,9 +585,9 @@ private:
       return 0;
     int left_diameter = diameter(node->left),
         right_diameter = diameter(node->right),
-        left_height = height(node->left),
-        right_height = height(node->right),
-        current_diameter = left_height + right_height + 1,
+        left_height = height(node->left) + 1,
+        right_height = height(node->right) + 1,
+        current_diameter = left_height + right_height,
         max_diameter = std::max(left_diameter, right_diameter);
     return std::max(current_diameter, max_diameter);
   }
@@ -594,7 +600,7 @@ private:
   {
     if (node == NULL)
       return 0;
-    if (level == 1)
+    if (level == 0)
       return 1;
     return width(node->left, level - 1) + width(node->right, level - 1);
   }
@@ -611,10 +617,7 @@ private:
   {
     if (node == NULL)
       return 1;
-    size_t res = 0;
-    res += leaf_count(node->left);
-    res += leaf_count(node->right);
-    return res;
+    return null_count(node->left) + null_count(node->right);
   }
 
   size_t sum_levels() const
@@ -662,7 +665,7 @@ private:
   {
     if (node == NULL)
       return level;
-    return sum_levels(node->left, level + 1) + sum_levels(node->right, level + 1);
+    return sum_null_levels(node->left, level + 1) + sum_null_levels(node->right, level + 1);
   }
 };
 
