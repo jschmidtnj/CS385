@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Name        : rbtree.h
- * Author      : Joshua Schmidt and Alex Rubino
+ * Author      : Alexander Rubino and Joshua Schmidt
  * Version     : 1.0
- * Date        : 11/6/2019
+ * Date        : November 6, 2019
  * Description : Implementation of red-black tree.
  * Pledge      : I pledge my honor that I have abided by the Stevens Honor System.
  ******************************************************************************/
