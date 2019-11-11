@@ -15,16 +15,14 @@
 #include <sstream>
 #include <bits/stdc++.h>
 #include <random>
-
-// #define DEBUG
-
-#ifdef DEBUG
+#include <thread>
+#include <mutex>
 #include <chrono>
-#endif
 
 #define MAP_SIZE 150000 // default size of map
 #define MAX_CHAR 127    // max ascii character
 #define MIN_CHAR 0      // min ascii character
+#define MIN_FOR_MULTITHREAD 1000
 
 /**
  * class for finding anagrams
@@ -42,6 +40,10 @@ private:
   std::default_random_engine generator;
   std::unordered_map<std::string, std::vector<std::string>> words;
   std::vector<std::string> mostAnagramKeys;
+  std::vector<std::string> input;
+  unsigned int num_threads;
+  std::mutex map_lock;
+  void addToMap(unsigned long start, unsigned long end);
   void swapStrings(std::string &elem1, std::string &elem2);
   long partitionKeys(std::string keys[], long left, long right);
   void quickSortKeys(std::string keys[], long left, long right);
@@ -141,6 +143,36 @@ std::string FindAnagrams::getSortedKey(std::string word)
   return word;
 }
 
+void FindAnagrams::addToMap(unsigned long start, unsigned long end)
+{
+  std::cout << "start " << start << " end " << end << '\n';
+  auto starttime = std::chrono::high_resolution_clock::now();
+  for (unsigned long i = start; i < end; i++)
+  {
+    std::string key = getSortedKey(input[i]);
+    if (key.length() == 0)
+      continue;
+    map_lock.lock();
+    words[key].push_back(input[i]);
+    if (words[key].size() < mostAnagrams)
+    {
+      map_lock.unlock();
+      continue;
+    }
+    else if (words[key].size() > mostAnagrams && words[key].size() > 1)
+    {
+      mostAnagrams = words[key].size();
+      mostAnagramKeys.clear();
+    }
+    mostAnagramKeys.push_back(key);
+    map_lock.unlock();
+  }
+  auto endtime = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endtime - starttime);
+  std::cout << "Time taken by function: "
+            << duration.count() << " microseconds\n";
+}
+
 /**
  * FindAnagrams constructor
  * 
@@ -150,46 +182,30 @@ std::string FindAnagrams::getSortedKey(std::string word)
 FindAnagrams::FindAnagrams(std::string filename)
 {
   words.reserve(MAP_SIZE);
+  num_threads = std::thread::hardware_concurrency();
   dictionaryFilename = filename;
   std::ifstream dictionaryFile(dictionaryFilename);
   std::string word;
-  std::vector<std::string> inputs;
-  inputs.reserve(MAP_SIZE);
-#ifdef DEBUG
-  auto starttime = std::chrono::high_resolution_clock::now();
-#endif
   while (std::getline(dictionaryFile, word))
-    inputs.push_back(word);
-  dictionaryFile.close();
-#ifdef DEBUG
-  auto endtime = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endtime - starttime);
-  std::cout << "Time taken by file read: "
-            << duration.count() << " microseconds\n";
-  starttime = std::chrono::high_resolution_clock::now();
-#endif
-  for (std::string &word : inputs)
   {
-    // std::cout << line << std::endl;
-    std::string key = getSortedKey(word);
-    if (key.length() == 0)
-      continue;
-    words[key].push_back(word);
-    if (words[key].size() < mostAnagrams)
-      continue;
-    else if (words[key].size() > mostAnagrams && words[key].size() > 1)
-    {
-      mostAnagrams = words[key].size();
-      mostAnagramKeys.clear();
-    }
-    mostAnagramKeys.push_back(key);
+    // std::cout << word << std::endl;
+    input.push_back(word);
   }
-#ifdef DEBUG
-  endtime = std::chrono::high_resolution_clock::now();
-  duration = std::chrono::duration_cast<std::chrono::microseconds>(endtime - starttime);
-  std::cout << "Time taken by logic: "
-            << duration.count() << " microseconds\n";
-#endif
+  if (input.size() > MIN_FOR_MULTITHREAD)
+  {
+    std::vector<std::thread> threads;
+    for (unsigned int i = 0; i < num_threads - 1; i++)
+    {
+      threads.push_back(std::thread(&FindAnagrams::addToMap, this, (float)i / num_threads * input.size(), (float)(i + 1) / num_threads * input.size()));
+    }
+    threads.push_back(std::thread(&FindAnagrams::addToMap, this, (float)(num_threads - 1) / num_threads * input.size(), input.size()));
+    for (std::thread &t : threads)
+      t.join();
+  }
+  else
+  {
+    addToMap(0, input.size());
+  }
 }
 
 /**
