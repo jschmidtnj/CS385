@@ -17,12 +17,11 @@
 #include <random>
 #include <thread>
 #include <mutex>
-#include <chrono>
 
 #define MAP_SIZE 150000 // default size of map
-#define MAX_CHAR 127    // max ascii character
-#define MIN_CHAR 0      // min ascii character
 #define MIN_FOR_MULTITHREAD 1000
+
+const int primeNums[26] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101};
 
 /**
  * class for finding anagrams
@@ -34,19 +33,19 @@ public:
   void printAnagrams();
 
 private:
-  std::string getSortedKey(std::string word);
+  unsigned long long getKey(std::string & word);
   std::string dictionaryFilename;
   unsigned long mostAnagrams = 0;
   std::default_random_engine generator;
-  std::unordered_map<std::string, std::vector<std::string>> words;
-  std::vector<std::string> mostAnagramKeys;
+  std::unordered_map<unsigned long long, std::vector<std::string>> words;
+  std::vector<unsigned long long> mostAnagramKeys;
   std::vector<std::string> input;
   unsigned int num_threads;
   std::mutex map_lock;
   void addToMap(unsigned long start, unsigned long end);
-  void swapStrings(std::string &elem1, std::string &elem2);
-  long partitionKeys(std::string keys[], long left, long right);
-  void quickSortKeys(std::string keys[], long left, long right);
+  void swapLongs(unsigned long long &elem1, unsigned long long &elem2);
+  long partitionKeys(unsigned long long keys[], long left, long right);
+  void quickSortKeys(unsigned long long keys[], long left, long right);
 };
 
 /**
@@ -83,9 +82,9 @@ void FindAnagrams::printAnagrams()
  * 
  * swap strings in array
  */
-void FindAnagrams::swapStrings(std::string &elem1, std::string &elem2)
+void FindAnagrams::swapLongs(unsigned long long &elem1, unsigned long long &elem2)
 {
-  std::string temp = elem1;
+  unsigned long long temp = elem1;
   elem1 = elem2;
   elem2 = temp;
 }
@@ -96,17 +95,17 @@ void FindAnagrams::swapStrings(std::string &elem1, std::string &elem2)
  * partitions keys using Lomuto with
  * random partition index
  */
-long FindAnagrams::partitionKeys(std::string keys[], long left, long right)
+long FindAnagrams::partitionKeys(unsigned long long keys[], long left, long right)
 {
   std::uniform_int_distribution<long> dist(left, right);
   unsigned long randIndex = dist(generator);
-  swapStrings(keys[randIndex], keys[left]);
+  swapLongs(keys[randIndex], keys[left]);
   std::string pivot = words[keys[left]][0];
   long s = left;
   for (long i = left + 1; i <= right; i++)
     if (words[keys[i]][0] < pivot)
-      swapStrings(keys[++s], keys[i]);
-  swapStrings(keys[left], keys[s]);
+      swapLongs(keys[++s], keys[i]);
+  swapLongs(keys[left], keys[s]);
   return s;
 }
 
@@ -115,7 +114,7 @@ long FindAnagrams::partitionKeys(std::string keys[], long left, long right)
  * 
  * quick sort the array based on first element in words
  */
-void FindAnagrams::quickSortKeys(std::string keys[], long left, long right)
+void FindAnagrams::quickSortKeys(unsigned long long keys[], long left, long right)
 {
   if (left < right)
   {
@@ -130,27 +129,27 @@ void FindAnagrams::quickSortKeys(std::string keys[], long left, long right)
  * 
  * gets the sorted key for a given word
  */
-std::string FindAnagrams::getSortedKey(std::string word)
+unsigned long long FindAnagrams::getKey(std::string & word)
 {
-  for (unsigned long i = 0; i < word.length(); i++)
+  unsigned long long res = 1;
+  for (int i = 0; i < (int)word.length(); i++)
   {
-    if (word[i] > MAX_CHAR || word[i] < MIN_CHAR)
-      return "";
     if (word[i] >= 'a' && word[i] <= 'z')
-      word[i] = word[i] - 'a' + 'A';
+      res *= primeNums[word[i] - 'a'];
+    else if (word[i] >= 'A' && word[i] <= 'Z')
+      res *= primeNums[word[i] - 'A'];
+    else
+      return 0;
   }
-  std::sort(word.begin(), word.end(), std::less<char>());
-  return word;
+  return res;
 }
 
 void FindAnagrams::addToMap(unsigned long start, unsigned long end)
 {
-  std::cout << "start " << start << " end " << end << '\n';
-  auto starttime = std::chrono::high_resolution_clock::now();
   for (unsigned long i = start; i < end; i++)
   {
-    std::string key = getSortedKey(input[i]);
-    if (key.length() == 0)
+    unsigned long long key = getKey(input[i]);
+    if (key == 0)
       continue;
     map_lock.lock();
     words[key].push_back(input[i]);
@@ -167,10 +166,6 @@ void FindAnagrams::addToMap(unsigned long start, unsigned long end)
     mostAnagramKeys.push_back(key);
     map_lock.unlock();
   }
-  auto endtime = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endtime - starttime);
-  std::cout << "Time taken by function: "
-            << duration.count() << " microseconds\n";
 }
 
 /**

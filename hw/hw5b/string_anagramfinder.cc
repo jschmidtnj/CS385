@@ -16,9 +16,9 @@
 #include <bits/stdc++.h>
 #include <random>
 
-#define MAP_SIZE 300000 // default size of map
-
-const int primeNums[26] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101};
+#define MAP_SIZE 150000 // default size of map
+#define MAX_CHAR 127    // max ascii character
+#define MIN_CHAR 0      // min ascii character
 
 /**
  * class for finding anagrams
@@ -30,15 +30,15 @@ public:
   void printAnagrams();
 
 private:
-  unsigned long long getKey(std::string & word);
+  std::string getSortedKey(std::string word);
   std::string dictionaryFilename;
   unsigned long mostAnagrams = 0;
   std::default_random_engine generator;
-  std::unordered_map<unsigned long long, std::vector<std::string>> words;
-  std::vector<unsigned long long> mostAnagramKeys;
-  void swapLongs(unsigned long long &elem1, unsigned long long &elem2);
-  long partitionKeys(unsigned long long keys[], long left, long right);
-  void quickSortKeys(unsigned long long keys[], long left, long right);
+  std::unordered_map<std::string, std::vector<std::string>> words;
+  std::vector<std::string> mostAnagramKeys;
+  void swapStrings(std::string &elem1, std::string &elem2);
+  long partitionKeys(std::string keys[], long left, long right);
+  void quickSortKeys(std::string keys[], long left, long right);
 };
 
 /**
@@ -71,13 +71,13 @@ void FindAnagrams::printAnagrams()
 }
 
 /**
- * swapLongs
+ * swapStrings
  * 
- * swap longs in array
+ * swap strings in array
  */
-void FindAnagrams::swapLongs(unsigned long long &elem1, unsigned long long &elem2)
+void FindAnagrams::swapStrings(std::string &elem1, std::string &elem2)
 {
-  unsigned long long temp = elem1;
+  std::string temp = elem1;
   elem1 = elem2;
   elem2 = temp;
 }
@@ -88,17 +88,17 @@ void FindAnagrams::swapLongs(unsigned long long &elem1, unsigned long long &elem
  * partitions keys using Lomuto with
  * random partition index
  */
-long FindAnagrams::partitionKeys(unsigned long long keys[], long left, long right)
+long FindAnagrams::partitionKeys(std::string keys[], long left, long right)
 {
   std::uniform_int_distribution<long> dist(left, right);
   unsigned long randIndex = dist(generator);
-  swapLongs(keys[randIndex], keys[left]);
+  swapStrings(keys[randIndex], keys[left]);
   std::string pivot = words[keys[left]][0];
   long s = left;
   for (long i = left + 1; i <= right; i++)
     if (words[keys[i]][0] < pivot)
-      swapLongs(keys[++s], keys[i]);
-  swapLongs(keys[left], keys[s]);
+      swapStrings(keys[++s], keys[i]);
+  swapStrings(keys[left], keys[s]);
   return s;
 }
 
@@ -107,7 +107,7 @@ long FindAnagrams::partitionKeys(unsigned long long keys[], long left, long righ
  * 
  * quick sort the array based on first element in words
  */
-void FindAnagrams::quickSortKeys(unsigned long long keys[], long left, long right)
+void FindAnagrams::quickSortKeys(std::string keys[], long left, long right)
 {
   if (left < right)
   {
@@ -122,19 +122,17 @@ void FindAnagrams::quickSortKeys(unsigned long long keys[], long left, long righ
  * 
  * gets the sorted key for a given word
  */
-unsigned long long FindAnagrams::getKey(std::string & word)
+std::string FindAnagrams::getSortedKey(std::string word)
 {
-  unsigned long long res = 1;
-  for (int i = 0; i < (int)word.length(); i++)
+  for (unsigned long i = 0; i < word.length(); i++)
   {
+    if (word[i] > MAX_CHAR || word[i] < MIN_CHAR)
+      return "";
     if (word[i] >= 'a' && word[i] <= 'z')
-      res *= primeNums[word[i] - 'a'];
-    else if (word[i] >= 'A' && word[i] <= 'Z')
-      res *= primeNums[word[i] - 'A'];
-    else
-      return 0;
+      word[i] = word[i] - 'a' + 'A';
   }
-  return res;
+  std::sort(word.begin(), word.end(), std::less<char>());
+  return word;
 }
 
 /**
@@ -152,8 +150,8 @@ FindAnagrams::FindAnagrams(std::string filename)
   while (std::getline(dictionaryFile, word))
   {
     // std::cout << line << std::endl;
-    unsigned long long key = getKey(word);
-    if (key == 0)
+    std::string key = getSortedKey(word);
+    if (key.length() == 0)
       continue;
     words[key].push_back(word);
     if (words[key].size() < mostAnagrams)
