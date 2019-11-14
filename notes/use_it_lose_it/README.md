@@ -8,7 +8,7 @@ def coin_row(c):
     if n <= 0:
       return 0
     if n in memo:
-      return c[n]
+      return memo[n]
     val = max(c[n] + coin_row_helper(n - 2, memo), coin_row_helper(n - 1, memo))
     memo[n] = val
     return val

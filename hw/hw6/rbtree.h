@@ -120,9 +120,7 @@ public:
         node_ptr = node_ptr->right;
 
         while (node_ptr->left != NULL)
-        {
           node_ptr = node_ptr->left;
-        }
       }
       else
       {
@@ -232,16 +230,13 @@ public:
   void insert(const iterator &it, const std::pair<K, V> &key_value)
   {
     const K &key = key_value.first;
-
     if (find(key) != end())
     {
       std::stringstream error_message_ss;
       error_message_ss << "Attempt to insert duplicate key '" << key << "'.";
       throw tree_exception(error_message_ss.str());
     }
-
     Node<K, V> *x, *y;
-
     if (it != end())
     {
       x = it.node_ptr;
@@ -252,36 +247,22 @@ public:
       x = root_;
       y = NULL;
     }
-
     while (x != NULL)
     {
       y = x;
       if (key < x->key())
-      {
         x = x->left;
-      }
       else
-      {
         x = x->right;
-      }
     }
-
     Node<K, V> *z = new Node<K, V>(key, key_value.second);
     z->parent = y;
-
     if (y == NULL)
-    {
       root_ = z;
-    }
     else if (key < y->key())
-    {
       y->left = z;
-    }
     else
-    {
       y->right = z;
-    }
-
     z->left = NULL;
     z->right = NULL;
     z->color = RED;
@@ -358,9 +339,7 @@ public:
     {
       size_t w = width(root_, i);
       if (w > max_width)
-      {
         max_width = w;
-      }
     }
     return max_width;
   }
@@ -394,17 +373,11 @@ public:
     {
       const K &current_key = x->key();
       if (key == current_key)
-      {
         break; // Found!
-      }
       else if (key < current_key)
-      {
         x = x->left;
-      }
       else
-      {
         x = x->right;
-      }
     }
     return iterator(x, this);
   }
@@ -419,12 +392,8 @@ public:
     // if the tree is not empty, the first node
     // in order is the farthest node left from root
     if (curr != NULL)
-    {
       while (curr->left != NULL)
-      {
         curr = curr->left;
-      }
-    }
 
     // build return value using private constructor
     return iterator(curr, this);
@@ -528,22 +497,14 @@ private:
     Node<K, V> *y = x->right;
     x->right = y->left;
     if (y->left != NULL)
-    {
       y->left->parent = x;
-    }
     y->parent = x->parent;
     if (x->parent == NULL)
-    {
       root_ = y;
-    }
     else if (x == x->parent->left)
-    {
       x->parent->left = y;
-    }
     else
-    {
       x->parent->right = y;
-    }
     y->left = x;
     x->parent = y;
   }
@@ -556,22 +517,14 @@ private:
     Node<K, V> *y = x->left;
     x->left = y->right;
     if (y->right != NULL)
-    {
       y->right->parent = x;
-    }
     y->parent = x->parent;
     if (x->parent == NULL)
-    {
       root_ = y;
-    }
     else if (x == x->parent->right)
-    {
       x->parent->right = y;
-    }
     else
-    {
       x->parent->left = y;
-    }
     y->right = x;
     x->parent = y;
   }
@@ -583,13 +536,8 @@ private:
   int height(Node<K, V> *node) const
   {
     if (node == NULL)
-    {
       return -1;
-    }
-    else
-    {
-      return 1 + std::max(height(node->left), height(node->right)); // STD:: helps overwrite max in this namespace
-    }
+    return 1 + std::max(height(node->left), height(node->right)); // STD:: helps overwrite max in this namespace
   }
 
   /**
@@ -599,17 +547,10 @@ private:
   size_t leaf_count(Node<K, V> *node) const
   {
     if (node == NULL)
-    {
       return 0;
-    }
     if (node->left == NULL && node->right == NULL)
-    {
       return 1;
-    }
-    else
-    {
-      return leaf_count(node->left) + leaf_count(node->right);
-    }
+    return leaf_count(node->left) + leaf_count(node->right);
   }
 
   /**
@@ -620,13 +561,8 @@ private:
   size_t internal_node_count(Node<K, V> *node) const
   {
     if (node == NULL || (node->left == NULL && node->right == NULL))
-    {
       return 0;
-    }
-    else
-    {
-      return 1 + internal_node_count(node->left) + internal_node_count(node->right);
-    }
+    return 1 + internal_node_count(node->left) + internal_node_count(node->right);
   }
 
   /**
@@ -638,16 +574,8 @@ private:
   int diameter(Node<K, V> *node) const
   {
     if (node == NULL)
-    {
       return 0;
-    }
-    int left_diameter = diameter(node->left),
-        right_diameter = diameter(node->right),
-        left_height = height(node->left) + 1,
-        right_height = height(node->right) + 1,
-        current_diameter = left_height + right_height,
-        max_diameter = std::max(left_diameter, right_diameter);
-    return std::max(current_diameter, max_diameter);
+    return 2 + height(node->left) + height(node->right);
   }
 
   /**
@@ -657,17 +585,10 @@ private:
   size_t width(Node<K, V> *node, size_t level) const
   {
     if (node == NULL)
-    {
       return 0;
-    }
     if (level == 0)
-    {
       return 1;
-    }
-    else
-    {
-      return width(node->left, level - 1) + width(node->right, level - 1);
-    }
+    return width(node->left, level - 1) + width(node->right, level - 1);
   }
 
   size_t null_count() const
@@ -681,9 +602,7 @@ private:
   size_t null_count(Node<K, V> *node) const
   {
     if (node == NULL)
-    {
       return 1;
-    }
     return null_count(node->left) + null_count(node->right);
   }
 
@@ -706,13 +625,8 @@ private:
   size_t sum_levels(Node<K, V> *node, size_t level) const
   {
     if (node == NULL)
-    {
       return 0;
-    }
-    else
-    {
-      return level + sum_levels(node->left, level + 1) + sum_levels(node->right, level + 1);
-    }
+    return level + sum_levels(node->left, level + 1) + sum_levels(node->right, level + 1);
   }
 
   size_t sum_null_levels() const
@@ -736,13 +650,8 @@ private:
   size_t sum_null_levels(Node<K, V> *node, size_t level) const
   {
     if (node == NULL)
-    {
       return level;
-    }
-    else
-    {
-      return sum_null_levels(node->left, level + 1) + sum_null_levels(node->right, level + 1);
-    }
+    return sum_null_levels(node->left, level + 1) + sum_null_levels(node->right, level + 1);
   }
 };
 
