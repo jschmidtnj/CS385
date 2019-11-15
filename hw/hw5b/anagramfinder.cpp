@@ -17,8 +17,11 @@
 #include <random>
 
 #define MAP_SIZE 300000 // default size of map
-
-const int primeNums[26] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101};
+// frequency of letters ascending: e, t, a, o, i, n, s, r, h, d, l, u, c, m, f, y, w, g, p, b, v, k, x, q, j, z
+// prime numbers ascending: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101
+// letters ascending:    a,  b,  c,  d, e,  f,  g,  h,  i,  j,  k,  l,  m,  n, o,  p,  q,  r,  s, t,  u,  v,  w,  x,  y,  z
+// corresponding primes: 5, 71, 41, 29, 2, 47, 61, 23, 11, 97, 79, 31, 43, 13, 7, 67, 89, 19, 17, 3, 37, 73, 59, 83, 53, 101
+const int primeNums[26] = {5, 71, 41, 29, 2, 47, 61, 23, 11, 97, 79, 31, 43, 13, 7, 67, 89, 19, 17, 3, 37, 73, 59, 83, 53, 101};
 
 /**
  * class for finding anagrams
@@ -30,7 +33,7 @@ public:
   void printAnagrams();
 
 private:
-  unsigned long long getKey(std::string & word);
+  unsigned long long getKey(std::string &word);
   std::string dictionaryFilename;
   unsigned long mostAnagrams = 0;
   std::default_random_engine generator;
@@ -122,10 +125,10 @@ void FindAnagrams::quickSortKeys(unsigned long long keys[], long left, long righ
  * 
  * gets the sorted key for a given word
  */
-unsigned long long FindAnagrams::getKey(std::string & word)
+unsigned long long FindAnagrams::getKey(std::string &word)
 {
   unsigned long long res = 1;
-  for (int i = 0; i < (int)word.length(); i++)
+  for (unsigned long i = 0; i < word.length(); i++)
   {
     if (word[i] >= 'a' && word[i] <= 'z')
       res *= primeNums[word[i] - 'a'];
