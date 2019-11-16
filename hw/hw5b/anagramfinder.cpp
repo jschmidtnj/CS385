@@ -16,7 +16,7 @@
 #include <bits/stdc++.h>
 #include <random>
 
-#define MAP_SIZE 300000 // default size of map
+#define MAP_SIZE 200000 // default size of map
 // frequency of letters ascending: e, t, a, o, i, n, s, r, h, d, l, u, c, m, f, y, w, g, p, b, v, k, x, q, j, z
 // prime numbers ascending: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101
 // letters ascending:    a,  b,  c,  d, e,  f,  g,  h,  i,  j,  k,  l,  m,  n, o,  p,  q,  r,  s, t,  u,  v,  w,  x,  y,  z
@@ -29,7 +29,7 @@ const int primeNums[26] = {5, 71, 41, 29, 2, 47, 61, 23, 11, 97, 79, 31, 43, 13,
 class FindAnagrams
 {
 public:
-  explicit FindAnagrams(std::string filename);
+  explicit FindAnagrams(const std::string filename);
   void printAnagrams();
 
 private:
@@ -121,7 +121,7 @@ void FindAnagrams::quickSortKeys(unsigned long long keys[], long left, long righ
 }
 
 /**
- * getSortedKey
+ * getKey
  * 
  * gets the sorted key for a given word
  */
@@ -143,10 +143,10 @@ unsigned long long FindAnagrams::getKey(std::string &word)
 /**
  * FindAnagrams constructor
  * 
- * creates FinAnagram object from
+ * creates FindAnagram object from
  * filename of dictionary
  */
-FindAnagrams::FindAnagrams(std::string filename)
+FindAnagrams::FindAnagrams(const std::string filename)
 {
   words.reserve(MAP_SIZE);
   dictionaryFilename = filename;
@@ -205,5 +205,5 @@ int main(const int argc, char *const argv[])
     std::cout << "Error: File '" << fileName << "' not found.\n";
     return -1;
   }
-  FindAnagrams(std::string(fileName)).printAnagrams();
+  FindAnagrams(fileName).printAnagrams();
 }
