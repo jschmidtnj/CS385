@@ -5,3 +5,8 @@
 - this works for up to 9 characters with unsigned long long
 - another is to just use a dictionary for the sorted letters
 - this works for more characters so it's the best way to go
+
+## benchmarking
+
+- benchmark with `sudo chrt -f 99 perf stat -ddd ./anagramfinder dictionary.txt`
+- could also use `time ./anagramfinder dictionary.txt`, but this is not very accurate
