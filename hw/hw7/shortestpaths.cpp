@@ -19,6 +19,17 @@ public:
   ~ShortestPaths();
 
 private:
+  struct Node
+  {
+    Node *left;
+    Node *right;
+    int x, y;
+    Node(int x_val, int y_val)
+    {
+      x = x_val;
+      y = y_val;
+    }
+  };
   std::string matrixFilename;
   unsigned int numNodes = 0;
   unsigned int maxDistance = 0;
@@ -58,21 +69,35 @@ void ShortestPaths::printPaths()
         path.push_back(i);
       else
       {
-        std::pair<unsigned int, unsigned int> current(i, j);
-        path.push_back(current.first);
-        std::stack<std::pair<unsigned int, unsigned int>> nodeStack;
-        nodeStack.push(current);
-        while (current.first != UINT_MAX && current.second != UINT_MAX && !nodeStack.empty())
+        Node *current = new Node(i, j);
+        std::stack<Node *> nodeStack;
+        int count = 1;
+        while (current != nullptr || !nodeStack.empty())
         {
-          while (intermediateMatrix[current.first][current.second] != UINT_MAX)
+          while (current != nullptr)
           {
-            current.second = intermediateMatrix[current.first][current.second];
+            unsigned int val = intermediateMatrix[current->x][current->y];
+            if (val == UINT_MAX)
+            {
+              current->left = nullptr;
+              current->right = nullptr;
+            }
+            else
+            {
+              current->left = new Node(current->x, val);
+              current->right = new Node(val, current->y);
+            }
             nodeStack.push(current);
+            current = current->left;
           }
           current = nodeStack.top();
           nodeStack.pop();
-          path.push_back(current.second);
-          current.first = intermediateMatrix[current.first][current.second];
+          if ((count & (count - 1)) == 0)
+            path.push_back(current->x);
+          if (((count + 1) & (count)) == 0)
+            path.push_back(current->y);
+          count += 2;
+          current = current->right;
         }
       }
       std::cout << char('A' + path[0]);
