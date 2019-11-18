@@ -1,2 +1,5 @@
 # ignore executable
 shortestpaths
+
+# ignore all text inputs
+*.txt
