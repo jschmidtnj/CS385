@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <queue>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -62,43 +63,61 @@ void ShortestPaths::printPaths()
   {
     for (unsigned int j = 0; j < numNodes; j++)
     {
-      std::cout << char('A' + i) + std::string(" -> ") + char('A' + j) + ", distance: " << pathMatrix[i][j] << ", path: ";
+      std::cout << char('A' + i) + std::string(" -> ") + char('A' + j) + ", distance: ";
+      if (pathMatrix[i][j] == UINT_MAX) {
+        std::cout << "infinity, path: none\n";
+        continue;
+      }
+      std::cout << pathMatrix[i][j] << ", path: ";
       // print the path here
       std::vector<unsigned int> path;
-      if (i == j)
-        path.push_back(i);
-      else
+      Node *root = new Node(i, j);
+      Node *current = root;
+      std::stack<Node *> nodeStack;
+      std::unordered_set<unsigned int> pathSet;
+      pathSet.reserve(numNodes * 2);
+      while (current != nullptr || !nodeStack.empty())
       {
-        Node *current = new Node(i, j);
-        std::stack<Node *> nodeStack;
-        int count = 1;
-        while (current != nullptr || !nodeStack.empty())
+        while (current != nullptr)
         {
-          while (current != nullptr)
+          unsigned int val = intermediateMatrix[current->x][current->y];
+          if (val == UINT_MAX)
           {
-            unsigned int val = intermediateMatrix[current->x][current->y];
-            if (val == UINT_MAX)
-            {
-              current->left = nullptr;
-              current->right = nullptr;
-            }
-            else
-            {
-              current->left = new Node(current->x, val);
-              current->right = new Node(val, current->y);
-            }
-            nodeStack.push(current);
-            current = current->left;
+            current->left = nullptr;
+            current->right = nullptr;
           }
-          current = nodeStack.top();
-          nodeStack.pop();
-          if ((count & (count - 1)) == 0)
-            path.push_back(current->x);
-          if (((count + 1) & (count)) == 0)
-            path.push_back(current->y);
-          count += 2;
-          current = current->right;
+          else
+          {
+            current->left = new Node(current->x, val);
+            current->right = new Node(val, current->y);
+          }
+          nodeStack.push(current);
+          current = current->left;
         }
+        current = nodeStack.top();
+        nodeStack.pop();
+        if (pathSet.find(current->x) == pathSet.end()) {
+          path.push_back(current->x);
+          pathSet.insert(current->x);
+        }
+        if (pathSet.find(current->y) == pathSet.end()) {
+          path.push_back(current->y);
+          pathSet.insert(current->y);
+        }
+        current = current->right;
+      }
+      // delete tree
+      std::queue<Node *> nodeQueue;
+      nodeQueue.push(root);
+      Node *front;
+      while (!nodeQueue.empty()) {
+        front = nodeQueue.front();
+        nodeQueue.pop();
+        if (front->left)
+          nodeQueue.push(front->left);
+        if (front->right)
+          nodeQueue.push(front->right);
+        delete front;
       }
       std::cout << char('A' + path[0]);
       for (unsigned long k = 1; k < path.size(); k++)
@@ -106,6 +125,7 @@ void ShortestPaths::printPaths()
       std::cout << '\n';
     }
   }
+  std::cout << '\n';
 }
 
 void ShortestPaths::printIntermediate()
