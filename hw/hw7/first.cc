@@ -1,20 +1,17 @@
-#include <iostream>
-#include <stack>
-#include <vector>
-
 class Node
 {
 public:
   Node *left;
   Node *right;
   int x, y;
-  Node(int x_val, int y_val) {
+  Node(int x_val, int y_val)
+  {
     x = x_val;
     y = y_val;
   }
 };
 
-int main()
+void test()
 {
   int num_nodes = 5;
   int **nodes = new int *[num_nodes];
@@ -50,16 +47,17 @@ int main()
       }
   int from = 2;
   int to = 1;
-  std::stack <Node *> node_path_stack;
+  std::stack<Node *> node_path_stack;
   Node root(from, to);
   node_path_stack.push(&root);
   while (!node_path_stack.empty())
   {
-    Node * current_node = node_path_stack.top();
+    Node *current_node = node_path_stack.top();
     int current_val = nodes[current_node->x][current_node->y];
-    if (current_val >= 0) {
-      current_node->left = & Node(current_node->x, current_val);
-      current_node->right = & Node(current_val, current_node->y);
+    if (current_val >= 0)
+    {
+      //current_node->left = &Node(current_node->x, current_val);
+      //current_node->right = &Node(current_val, current_node->y);
       node_path_stack.push(current_node->left);
       node_path_stack.push(current_node->right);
     }
@@ -67,10 +65,11 @@ int main()
   }
   std::vector<Node *> path;
   node_path_stack.push(&root);
-  Node * curr = &root;
+  Node *curr = &root;
   while (curr != nullptr || !node_path_stack.empty())
   {
-    while (curr->left != nullptr) {
+    while (curr->left != nullptr)
+    {
       curr = curr->left;
       node_path_stack.push(curr);
     }
