@@ -64,7 +64,8 @@ void ShortestPaths::printPaths()
     for (unsigned int j = 0; j < numNodes; j++)
     {
       std::cout << char('A' + i) + std::string(" -> ") + char('A' + j) + ", distance: ";
-      if (pathMatrix[i][j] == UINT_MAX) {
+      if (pathMatrix[i][j] == UINT_MAX)
+      {
         std::cout << "infinity, path: none\n";
         continue;
       }
@@ -96,11 +97,13 @@ void ShortestPaths::printPaths()
         }
         current = nodeStack.top();
         nodeStack.pop();
-        if (pathSet.find(current->x) == pathSet.end()) {
+        if (pathSet.find(current->x) == pathSet.end())
+        {
           path.push_back(current->x);
           pathSet.insert(current->x);
         }
-        if (pathSet.find(current->y) == pathSet.end()) {
+        if (pathSet.find(current->y) == pathSet.end())
+        {
           path.push_back(current->y);
           pathSet.insert(current->y);
         }
@@ -110,7 +113,8 @@ void ShortestPaths::printPaths()
       std::queue<Node *> nodeQueue;
       nodeQueue.push(root);
       Node *front;
-      while (!nodeQueue.empty()) {
+      while (!nodeQueue.empty())
+      {
         front = nodeQueue.front();
         nodeQueue.pop();
         if (front->left)
