@@ -53,7 +53,7 @@ private:
   unsigned long **distanceMatrix;
   unsigned long **pathMatrix;
   unsigned long **intermediateMatrix;
-  unsigned int numDigits(unsigned int num);
+  unsigned int numDigits(unsigned long num);
   void printMatrix(unsigned long maxVal, unsigned long **array, bool chars);
 };
 
@@ -61,7 +61,7 @@ private:
  * numDigits
  * Gets the number of digits in a given number
  */
-unsigned int ShortestPaths::numDigits(unsigned int num) {
+unsigned int ShortestPaths::numDigits(unsigned long num) {
   if (num == 0) {
     return 1;
   }
