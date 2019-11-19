@@ -267,7 +267,7 @@ void ShortestPaths::processFile()
   std::istringstream iss;
   iss.str(line);
   int potentialNumNodes;
-  if (!(iss >> potentialNumNodes) || potentialNumNodes <= 0)
+  if (!(iss >> potentialNumNodes) || potentialNumNodes <= 0 || char('A' + potentialNumNodes - 1) > 'Z')
     throw std::invalid_argument("Error: Invalid number of vertices '" + line + "' on line 1.");
   iss.clear();
   numNodes = potentialNumNodes;
