@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Name        : shortestpaths.cpp
+ * Author      : Joshua Schmidt and Alexander Rubino
+ * Version     : 1.0
+ * Date        : November 18, 2019
+ * Description : Implementation of shortest paths.
+ * Pledge      : I pledge my honor that I have abided by the Stevens Honor System.
+ ******************************************************************************/
 #include <iostream>
 #include <stack>
 #include <vector>
