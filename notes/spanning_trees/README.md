@@ -7,7 +7,7 @@ A **spanning tree** of an undirected connected graph is its connected acyclic su
 greedy algorithm
 
 tree vertices | remaining vertices
-a(-,-) | b(a, 3), c(-, inf), d(-, inf), e(0, 6), f(a, 3)
+a(-,-) | b(a, 3), c(-, inf), d(-, inf), e(a, 6), f(a, 3)
 b(a, 3) | c(b, 1), d(-, inf), e(a, 6), f(b, 4)
 c(b, 1) | d(c, 6), e(a, 6), f(b, 4)
 f(b, 4) | d(f, 5), e(f, 2)
