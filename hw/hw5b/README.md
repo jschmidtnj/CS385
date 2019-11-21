@@ -10,3 +10,4 @@
 
 - benchmark with `sudo chrt -f 99 perf stat -ddd ./anagramfinder dictionary.txt`
 - could also use `time ./anagramfinder dictionary.txt`, but this is not very accurate
+- fastest way to read file is fread_unlocked
