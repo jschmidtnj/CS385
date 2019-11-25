@@ -230,12 +230,6 @@ public:
   void insert(const iterator &it, const std::pair<K, V> &key_value)
   {
     const K &key = key_value.first;
-    if (find(key) != end())
-    {
-      std::stringstream error_message_ss;
-      error_message_ss << "Attempt to insert duplicate key '" << key << "'.";
-      throw tree_exception(error_message_ss.str());
-    }
     Node<K, V> *x, *y;
     if (it != end())
     {
@@ -252,8 +246,14 @@ public:
       y = x;
       if (key < x->key())
         x = x->left;
-      else
+      else if (key > x->key())
         x = x->right;
+      else
+      {
+        std::stringstream error_message_ss;
+        error_message_ss << "Attempt to insert duplicate key '" << key << "'.";
+        throw tree_exception(error_message_ss.str());
+      }
     }
     Node<K, V> *z = new Node<K, V>(key, key_value.second);
     z->parent = y;

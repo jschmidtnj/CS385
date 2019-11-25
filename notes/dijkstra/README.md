@@ -2,7 +2,7 @@
 
 - single source shortest path
 - (unlike floyd's with all paths)
-- $\mathcal{0} (E \log V)$
+- $\mathcal{O} (E \log V)$
 
 ## Huffman Encoding
 
