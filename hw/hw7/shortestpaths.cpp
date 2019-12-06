@@ -278,6 +278,7 @@ void ShortestPaths::processFile()
   std::stringstream linestream;
   std::string splitSegment;
   std::vector<std::string> splitLine;
+  const char endChar = char('A' + numNodes - 1);
   while (std::getline(pathFile, line))
   {
     lineNum++;
@@ -287,7 +288,6 @@ void ShortestPaths::processFile()
     linestream.clear();
     if (splitLine.size() != 3)
       throw std::invalid_argument("Error: Invalid edge data '" + line + "' on line " + std::to_string(lineNum) + ".");
-    const char endChar = char('A' + numNodes - 1);
     for (unsigned int i = 0; i < 2; i++)
       if (splitLine[i].length() != 1 || splitLine[i][0] < 'A' || splitLine[i][0] > endChar)
         throw std::invalid_argument("Error: " + std::string(i == 0 ? "Starting" : "Ending") + " vertex '" + splitLine[i] + "' on line " + std::to_string(lineNum) + " is not among valid values A-" + endChar + ".");
@@ -351,7 +351,7 @@ inline bool testFileExists(const std::string &name)
  * main function with initial argument
  * insertion logic
  */
-int main(const int argc, char *const argv[])
+int main(const int argc, const char *argv[])
 {
   if (argc != 2)
   {
