@@ -14,6 +14,8 @@
 
 using namespace std;
 
+#define NUM_JUGS 3
+
 /**
  * WaterJugs class
  * 
@@ -103,7 +105,7 @@ void WaterJugs::print_solution()
       }
     }
     cout << "Pour " << amount_poured << " gallon" << (amount_poured != 1 ? "s" : "")
-         << " from " << char(from_index + 65) << " to " << char(to_index + 65) << ". (";
+         << " from " << char(from_index + 'A') << " to " << char(to_index + 'A') << ". (";
     cout << current->levels[0];
     for (long unsigned int i = 1; i < _capacities.size(); i++)
       cout << ", " << current->levels[i];
@@ -164,36 +166,42 @@ void WaterJugs::find_solution()
  */
 int main(int argc, const char *argv[])
 {
-  if (argc != 7)
+  if (argc != NUM_JUGS * 2 + 1)
   {
-    cerr << "Usage: ./waterjugpuzzle <cap A> <cap B> <cap C> <goal A> <goal B> <goal C>" << endl;
-    return -1;
+    cerr << "Usage: " << argv[0];
+    for (int i = 0; i < NUM_JUGS; i++) {
+      cout << " <cap " << char('A' + i) << '>';
+    }
+    for (int i = 0; i < NUM_JUGS; i++) {
+      cout << " <goal " << char('A' + i) << '>';
+    }
+    cout << endl;
+    return EXIT_FAILURE;
   }
-  int num_jugs = (argc - 1) / 2;
   istringstream iss;
   vector<int> capacities;
-  capacities.reserve(num_jugs);
+  capacities.reserve(NUM_JUGS);
   int current;
-  for (int i = 1; i <= num_jugs; i++)
+  for (int i = 1; i <= NUM_JUGS; i++)
   {
     iss.str(argv[i]);
     if (!((iss >> current) && ((i == 3 && current > 0) || (i != 3 && current >= 0))))
     {
-      cerr << "Error: Invalid capacity \'" << argv[i] << "\' for jug " << char(i + 64) << '.' << endl;
-      return -1;
+      cerr << "Error: Invalid capacity \'" << argv[i] << "\' for jug " << char(i + 'A' - 1) << '.' << endl;
+      return EXIT_FAILURE;
     }
     capacities.push_back(current);
     iss.clear();
   }
   vector<int> goals;
-  goals.reserve(num_jugs);
-  for (int i = 1 + num_jugs; i <= 2 * num_jugs; i++)
+  goals.reserve(NUM_JUGS);
+  for (int i = 1 + NUM_JUGS; i <= 2 * NUM_JUGS; i++)
   {
     iss.str(argv[i]);
     if (!((iss >> current) && current >= 0))
     {
-      cerr << "Error: Invalid goal \'" << argv[i] << "\' for jug " << char(i + 61) << '.' << endl;
-      return -1;
+      cerr << "Error: Invalid goal \'" << argv[i] << "\' for jug " << char(i + 'A' - 4) << '.' << endl;
+      return EXIT_FAILURE;
     }
     goals.push_back(current);
     iss.clear();
@@ -202,8 +210,8 @@ int main(int argc, const char *argv[])
   {
     if (capacities[i] < goals[i])
     {
-      cerr << "Error: Goal cannot exceed capacity of jug " << char(i + 65) << '.' << endl;
-      return -1;
+      cerr << "Error: Goal cannot exceed capacity of jug " << char(i + 'A') << '.' << endl;
+      return EXIT_FAILURE;
     }
   }
   int goals_sum = 0;
@@ -211,8 +219,8 @@ int main(int argc, const char *argv[])
     goals_sum += goal;
   if (capacities.back() != goals_sum)
   {
-    cerr << "Error: Total gallons in goal state must be equal to the capacity of jug " << char(num_jugs + 64) << "." << endl;
-    return -1;
+    cerr << "Error: Total gallons in goal state must be equal to the capacity of jug " << char(NUM_JUGS - 1 + 'A') << "." << endl;
+    return EXIT_FAILURE;
   }
   WaterJugs jugs(capacities, goals);
   jugs.print_solution();

@@ -194,7 +194,7 @@ void ShortestPaths::printMatrix(unsigned long maxVal, unsigned long **array, boo
   std::cout << " A";
   for (unsigned int i = 1; i < numNodes; i++)
   {
-    for (unsigned int i = 0; i < maxDigits; i++)
+    for (unsigned int j = 0; j < maxDigits; j++)
       std::cout << ' ';
     std::cout << char('A' + i);
   }
@@ -208,7 +208,7 @@ void ShortestPaths::printMatrix(unsigned long maxVal, unsigned long **array, boo
       for (unsigned int k = 0; k < numSpaces; k++)
         std::cout << ' ';
       if (array[i][j] == ULONG_MAX)
-        std::cout << "-";
+        std::cout << '-';
       else if (chars)
         std::cout << char('A' + array[i][j]);
       else
